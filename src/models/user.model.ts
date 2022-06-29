@@ -22,6 +22,7 @@ const userSchema = new mongoose.Schema(
     },
     type: {
       type: String,
+      enum: ['register', 'google', 'facebook'],
       default: 'register',
     },
   },

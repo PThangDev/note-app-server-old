@@ -21,6 +21,7 @@ const userSchema = new mongoose_1.default.Schema({
     },
     type: {
         type: String,
+        enum: ['register', 'google', 'facebook'],
         default: 'register',
     },
 }, { timestamps: true });

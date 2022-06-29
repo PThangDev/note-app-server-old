@@ -12,13 +12,13 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+const bcrypt_1 = __importDefault(require("bcrypt"));
+const http_errors_1 = __importDefault(require("http-errors"));
+const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
+const sendEmail_1 = __importDefault(require("../helpers/sendEmail"));
 const user_model_1 = __importDefault(require("../models/user.model"));
 const utils_1 = require("../utils");
-const http_errors_1 = __importDefault(require("http-errors"));
-const bcrypt_1 = __importDefault(require("bcrypt"));
 const generateToken_1 = require("../utils/generateToken");
-const sendEmail_1 = __importDefault(require("../helpers/sendEmail"));
-const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const CLIENT_URL = process.env.CLIENT_URL;
 const userService = {
     // Create user

@@ -1,13 +1,11 @@
-import { omit } from 'lodash';
-import userModel from '../models/user.model';
-import { IChangePassword, IDecodedToken, INewUser, IUser, IUserLogin } from '../types';
-import { validateEmail } from '../utils';
-import createErrors from 'http-errors';
 import bcrypt from 'bcrypt';
-import { generateAccessToken, generateActiveToken, generateRefreshToken } from '../utils/generateToken';
-import sendEmail from '../helpers/sendEmail';
-import { Request } from 'express';
+import createErrors from 'http-errors';
 import jwt from 'jsonwebtoken';
+import sendEmail from '../helpers/sendEmail';
+import userModel from '../models/user.model';
+import { IChangePassword, IDecodedToken, INewUser, IUserLogin } from '../types';
+import { validateEmail } from '../utils';
+import { generateAccessToken, generateActiveToken, generateRefreshToken } from '../utils/generateToken';
 
 const CLIENT_URL = process.env.CLIENT_URL;
 const userService = {
