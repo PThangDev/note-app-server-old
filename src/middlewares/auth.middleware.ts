@@ -5,14 +5,15 @@ import userModel from '../models/user.model';
 import { IDecodedToken, IRequestAuth } from '../types';
 const authMiddleware = async (req: IRequestAuth, res: Response, next: NextFunction) => {
   try {
-    const token = req.header('Authorization');
+    const bearerToken = req.header('Authorization');
+    const token = bearerToken?.split(' ')[1];
     if (!token) throw createErrors(401, 'Unauthorization!');
 
     const decodedToken = <IDecodedToken>jwt.verify(token, `${process.env.ACCESS_TOKEN_SECRET}`);
 
     if (!decodedToken) throw createErrors(401, 'Unauthorization!');
 
-    const user = await userModel.findOne({ _id: decodedToken.id }).select('-password');
+    const user = await userModel.findOne({ _id: decodedToken._id }).select('-password');
 
     if (!user) throw createErrors(401, 'User does not exists');
 

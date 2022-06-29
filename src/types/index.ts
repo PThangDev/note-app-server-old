@@ -1,11 +1,13 @@
 import { Request } from 'express';
 
 export interface IUser extends Document {
+  _id: string;
   username: string;
   password: string;
   email: string;
   avatar: string;
   role: 'admin' | 'customer';
+  type: string;
   _doc: object;
 }
 export interface INewUser {
@@ -20,13 +22,14 @@ export interface IUserLogin {
 }
 
 export interface IDecodedToken {
-  id?: string;
+  _id?: string;
   newUser?: INewUser;
   iat: number;
   exp: number;
 }
 
 export interface IChangePassword {
+  user: IUser;
   oldPassword: string;
   newPassword: string;
 }

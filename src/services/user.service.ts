@@ -9,11 +9,10 @@ import sendEmail from '../helpers/sendEmail';
 import { Request } from 'express';
 import jwt from 'jsonwebtoken';
 
+const CLIENT_URL = process.env.CLIENT_URL;
 const userService = {
   // Create user
   async createUser(data: INewUser) {
-    const CLIENT_URL = process.env.CLIENT_URL;
-
     try {
       const { username, email, password } = data;
       const passwordHash = await bcrypt.hash(password, 12);
@@ -21,7 +20,7 @@ const userService = {
       const active_token = generateActiveToken({ newUser: { username, email, password: passwordHash } });
 
       const url = `${CLIENT_URL}/active/${active_token}`;
-      sendEmail(email, url, 'Verify your email address');
+      await sendEmail(email, url, 'Verify your email address');
 
       return { url, active_token };
     } catch (error) {
@@ -47,18 +46,16 @@ const userService = {
       if (!isMatchPassword) {
         throw createErrors(400, 'Password is incorrect');
       }
-      const access_token = generateAccessToken({ id: user._id });
-      const refresh_token = generateRefreshToken({ id: user._id });
+      const access_token = generateAccessToken({ _id: user._id });
+      const refresh_token = generateRefreshToken({ _id: user._id });
       return { ...user._doc, access_token, refresh_token, password: '' };
     } catch (error) {
       throw error;
     }
   },
   // Active account
-  async activeAccount(req: Request) {
+  async activeAccount(active_token: string) {
     try {
-      const { active_token } = req.body;
-
       const decodedToken = jwt.verify(active_token, `${process.env.ACTIVE_TOKEN_SECRET}`) as IDecodedToken;
 
       const { newUser } = decodedToken;
@@ -74,8 +71,31 @@ const userService = {
     }
   },
   // Change password
-  async changePassword({ oldPassword, newPassword }: IChangePassword) {
+  async changePassword({ oldPassword, newPassword, user }: IChangePassword) {
     try {
+      const newPasswordHash = await bcrypt.hash(newPassword, 12);
+
+      const result = await userModel.findByIdAndUpdate(user._id, { password: newPasswordHash });
+      return result;
+    } catch (error) {
+      throw error;
+    }
+  },
+
+  // Forgot password
+  async resetPassword(email: string): Promise<void> {
+    try {
+      const user = await userModel.findOne({ email });
+
+      if (!user) throw createErrors(400, 'Email does not exists');
+
+      if (user.type !== 'register')
+        throw createErrors(400, `Quick login account with ${user.type} can't use this function.`);
+
+      const access_token = generateAccessToken({ _id: user._id });
+      const url = `${CLIENT_URL}/reset-password/${access_token}`;
+
+      await sendEmail(email, url, 'Forgot password?');
     } catch (error) {
       throw error;
     }

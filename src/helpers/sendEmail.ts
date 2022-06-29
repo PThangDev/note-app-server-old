@@ -54,7 +54,6 @@ const sendEmail = async (to: string, url: string, txt: string) => {
     const result = await transport.sendMail(mailOptions);
     return result;
   } catch (err) {
-    console.log(err);
     throw err;
   }
 };

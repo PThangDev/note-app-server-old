@@ -1,5 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 import userService from '../services/user.service';
+import { IRequestAuth } from '../types';
 import { generateActiveToken } from '../utils/generateToken';
 
 const userController = {
@@ -26,7 +27,8 @@ const userController = {
   // POST: active account
   async activeAccount(req: Request, res: Response, next: NextFunction) {
     try {
-      await userService.activeAccount(req);
+      const { active_token } = req.body;
+      await userService.activeAccount(active_token);
       return res.status(200).json({ message: 'Account has been activated' });
     } catch (error) {
       next(error);
@@ -42,10 +44,20 @@ const userController = {
     }
   },
   // PUT: change password
-  async changePassword(req: Request, res: Response, next: NextFunction) {
+  async changePassword(req: IRequestAuth, res: Response, next: NextFunction) {
     try {
-      res.clearCookie('refreshtoken', { path: `/api/v1/auth/refresh_token` });
-      return res.status(200).json({ message: 'Logged out' });
+      const user = req.user;
+      await userService.changePassword({ ...req.body, user });
+      return res.status(200).json({ message: 'Change password successfully' });
+    } catch (error) {
+      next(error);
+    }
+  },
+  async forgotPassword(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { email } = req.body;
+      await userService.resetPassword(email);
+      return res.status(200).json({ message: 'Success. Please check your email' });
     } catch (error) {
       next(error);
     }

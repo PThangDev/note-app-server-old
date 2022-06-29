@@ -1,5 +1,7 @@
+import { validateChangePassword, validateForgotPassword } from './../middlewares/validateRequest.middleware';
 import express from 'express';
 import userController from '../controllers/user.controller';
+import authMiddleware from '../middlewares/auth.middleware';
 import { validateLogin, validateResgier } from '../middlewares/validateRequest.middleware';
 import { registerSchema } from '../schema/user.schema';
 
@@ -21,7 +23,10 @@ router.post('/active', userController.activeAccount);
 // GET: /api/v1/auth/logout
 router.post('/logout', userController.logout);
 // Change password
-// GET: /api/v1/auth/change-password
-router.post('/change-password', userController.changePassword);
+// PUT: /api/v1/auth/change-password
+router.put('/change-password', authMiddleware, validateChangePassword, userController.changePassword);
+// Forgot Password
+// GET: /api/v1/auth/forgot-password
+router.post('/forgot-password', validateForgotPassword, userController.forgotPassword);
 
 export default router;
