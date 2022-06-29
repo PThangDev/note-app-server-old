@@ -17,13 +17,14 @@ const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const user_model_1 = __importDefault(require("../models/user.model"));
 const authMiddleware = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const token = req.header('Authorization');
+        const bearerToken = req.header('Authorization');
+        const token = bearerToken === null || bearerToken === void 0 ? void 0 : bearerToken.split(' ')[1];
         if (!token)
             throw (0, http_errors_1.default)(401, 'Unauthorization!');
         const decodedToken = jsonwebtoken_1.default.verify(token, `${process.env.ACCESS_TOKEN_SECRET}`);
         if (!decodedToken)
             throw (0, http_errors_1.default)(401, 'Unauthorization!');
-        const user = yield user_model_1.default.findOne({ _id: decodedToken.id }).select('-password');
+        const user = yield user_model_1.default.findOne({ _id: decodedToken._id }).select('-password');
         if (!user)
             throw (0, http_errors_1.default)(401, 'User does not exists');
         req.user = user;

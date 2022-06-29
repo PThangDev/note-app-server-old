@@ -19,17 +19,17 @@ const bcrypt_1 = __importDefault(require("bcrypt"));
 const generateToken_1 = require("../utils/generateToken");
 const sendEmail_1 = __importDefault(require("../helpers/sendEmail"));
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
+const CLIENT_URL = process.env.CLIENT_URL;
 const userService = {
     // Create user
     createUser(data) {
         return __awaiter(this, void 0, void 0, function* () {
-            const CLIENT_URL = process.env.CLIENT_URL;
             try {
                 const { username, email, password } = data;
                 const passwordHash = yield bcrypt_1.default.hash(password, 12);
                 const active_token = (0, generateToken_1.generateActiveToken)({ newUser: { username, email, password: passwordHash } });
                 const url = `${CLIENT_URL}/active/${active_token}`;
-                (0, sendEmail_1.default)(email, url, 'Verify your email address');
+                yield (0, sendEmail_1.default)(email, url, 'Verify your email address');
                 return { url, active_token };
             }
             catch (error) {
@@ -58,8 +58,8 @@ const userService = {
                 if (!isMatchPassword) {
                     throw (0, http_errors_1.default)(400, 'Password is incorrect');
                 }
-                const access_token = (0, generateToken_1.generateAccessToken)({ id: user._id });
-                const refresh_token = (0, generateToken_1.generateRefreshToken)({ id: user._id });
+                const access_token = (0, generateToken_1.generateAccessToken)({ _id: user._id });
+                const refresh_token = (0, generateToken_1.generateRefreshToken)({ _id: user._id });
                 return Object.assign(Object.assign({}, user._doc), { access_token, refresh_token, password: '' });
             }
             catch (error) {
@@ -68,10 +68,9 @@ const userService = {
         });
     },
     // Active account
-    activeAccount(req) {
+    activeAccount(active_token) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const { active_token } = req.body;
                 const decodedToken = jsonwebtoken_1.default.verify(active_token, `${process.env.ACTIVE_TOKEN_SECRET}`);
                 const { newUser } = decodedToken;
                 if (!newUser) {
@@ -86,9 +85,31 @@ const userService = {
         });
     },
     // Change password
-    changePassword({ oldPassword, newPassword }) {
+    changePassword({ oldPassword, newPassword, user }) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
+                const newPasswordHash = yield bcrypt_1.default.hash(newPassword, 12);
+                const result = yield user_model_1.default.findByIdAndUpdate(user._id, { password: newPasswordHash });
+                return result;
+            }
+            catch (error) {
+                throw error;
+            }
+        });
+    },
+    // Forgot password
+    resetPassword(email) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const user = yield user_model_1.default.findOne({ email });
+                if (!user)
+                    throw (0, http_errors_1.default)(400, 'Email does not exists');
+                if (user.type !== 'register')
+                    throw (0, http_errors_1.default)(400, `Quick login account with ${user.type} can't use this function.`);
+                const access_token = (0, generateToken_1.generateAccessToken)({ _id: user._id });
+                const url = `${CLIENT_URL}/reset-password/${access_token}`;
+                yield (0, sendEmail_1.default)(email, url, 'Forgot password?');
+                return access_token;
             }
             catch (error) {
                 throw error;

@@ -83,7 +83,7 @@ const userService = {
   },
 
   // Forgot password
-  async resetPassword(email: string): Promise<void> {
+  async resetPassword(email: string): Promise<string> {
     try {
       const user = await userModel.findOne({ email });
 
@@ -96,6 +96,7 @@ const userService = {
       const url = `${CLIENT_URL}/reset-password/${access_token}`;
 
       await sendEmail(email, url, 'Forgot password?');
+      return access_token;
     } catch (error) {
       throw error;
     }

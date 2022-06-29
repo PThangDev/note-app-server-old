@@ -10,7 +10,7 @@ const generateActiveToken = (payload) => {
 };
 exports.generateActiveToken = generateActiveToken;
 const generateAccessToken = (payload) => {
-    return jsonwebtoken_1.default.sign(payload, `${process.env.ACCESS_TOKEN_SECRET}`, { expiresIn: '15m' });
+    return jsonwebtoken_1.default.sign(payload, `${process.env.ACCESS_TOKEN_SECRET}`, { expiresIn: '30m' });
 };
 exports.generateAccessToken = generateAccessToken;
 const generateRefreshToken = (payload) => {

@@ -42,7 +42,8 @@ const userController = {
     activeAccount(req, res, next) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                yield user_service_1.default.activeAccount(req);
+                const { active_token } = req.body;
+                yield user_service_1.default.activeAccount(active_token);
                 return res.status(200).json({ message: 'Account has been activated' });
             }
             catch (error) {
@@ -66,8 +67,21 @@ const userController = {
     changePassword(req, res, next) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                res.clearCookie('refreshtoken', { path: `/api/v1/auth/refresh_token` });
-                return res.status(200).json({ message: 'Logged out' });
+                const user = req.user;
+                yield user_service_1.default.changePassword(Object.assign(Object.assign({}, req.body), { user }));
+                return res.status(200).json({ message: 'Change password successfully' });
+            }
+            catch (error) {
+                next(error);
+            }
+        });
+    },
+    forgotPassword(req, res, next) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const { email } = req.body;
+                const access_token = yield user_service_1.default.resetPassword(email);
+                return res.status(200).json({ access_token, message: 'Success. Please check your email' });
             }
             catch (error) {
                 next(error);

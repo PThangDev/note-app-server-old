@@ -19,6 +19,10 @@ const userSchema = new mongoose_1.default.Schema({
         enum: ['customer', 'admin'],
         default: 'customer',
     },
+    type: {
+        type: String,
+        default: 'register',
+    },
 }, { timestamps: true });
 // Middlewares
 // userSchema.methods.comparePassword = async function (candidatePassword: string) {

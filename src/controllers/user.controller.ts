@@ -56,8 +56,8 @@ const userController = {
   async forgotPassword(req: Request, res: Response, next: NextFunction) {
     try {
       const { email } = req.body;
-      await userService.resetPassword(email);
-      return res.status(200).json({ message: 'Success. Please check your email' });
+      const access_token = await userService.resetPassword(email);
+      return res.status(200).json({ access_token, message: 'Success. Please check your email' });
     } catch (error) {
       next(error);
     }
