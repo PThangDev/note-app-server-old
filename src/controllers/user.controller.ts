@@ -1,11 +1,10 @@
 import { NextFunction, Request, Response } from 'express';
 import userService from '../services/user.service';
 import { IRequestAuth } from '../types';
-import { generateActiveToken } from '../utils/generateToken';
 
 const userController = {
   // POST: Login
-  async login(req: Request, res: Response, next: NextFunction) {
+  async loginHandler(req: Request, res: Response, next: NextFunction) {
     try {
       const user = await userService.loginUser(req.body);
 
@@ -15,7 +14,7 @@ const userController = {
     }
   },
   // POST: Register
-  async register(req: Request, res: Response, next: NextFunction) {
+  async registerHandler(req: Request, res: Response, next: NextFunction) {
     try {
       const data = await userService.createUser(req.body);
 
@@ -25,7 +24,7 @@ const userController = {
     }
   },
   // POST: active account
-  async activeAccount(req: Request, res: Response, next: NextFunction) {
+  async activeAccountHandler(req: Request, res: Response, next: NextFunction) {
     try {
       const { active_token } = req.body;
       await userService.activeAccount(active_token);
@@ -35,7 +34,7 @@ const userController = {
     }
   },
   // GET: logout
-  async logout(req: Request, res: Response, next: NextFunction) {
+  async logoutHandler(req: Request, res: Response, next: NextFunction) {
     try {
       res.clearCookie('refreshtoken', { path: `/api/v1/auth/refresh_token` });
       return res.status(200).json({ message: 'Logged out' });
@@ -44,7 +43,7 @@ const userController = {
     }
   },
   // PUT: change password
-  async changePassword(req: IRequestAuth, res: Response, next: NextFunction) {
+  async changePasswordHandler(req: IRequestAuth, res: Response, next: NextFunction) {
     try {
       const user = req.user;
       await userService.changePassword({ ...req.body, user });
@@ -53,7 +52,7 @@ const userController = {
       next(error);
     }
   },
-  async forgotPassword(req: Request, res: Response, next: NextFunction) {
+  async forgotPasswordHandler(req: Request, res: Response, next: NextFunction) {
     try {
       const { email } = req.body;
       const access_token = await userService.resetPassword(email);

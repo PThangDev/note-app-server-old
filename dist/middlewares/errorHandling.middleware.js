@@ -8,6 +8,6 @@ const errorHandlingMiddleware = (err, req, res, next) => {
         const fieldError = Object.keys(err.keyValue)[0];
         return res.status(status).json({ message: `${(0, utils_1.uppercaseFirstLetter)(fieldError)} has already exists` });
     }
-    return res.status(200).json({ errors: err });
+    return res.status(status).json({ errors: err });
 };
 exports.default = errorHandlingMiddleware;

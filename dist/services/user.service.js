@@ -18,7 +18,7 @@ const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const sendEmail_1 = __importDefault(require("../helpers/sendEmail"));
 const user_model_1 = __importDefault(require("../models/user.model"));
 const utils_1 = require("../utils");
-const generateToken_1 = require("../utils/generateToken");
+const generateToken_1 = require("../helpers/generateToken");
 const CLIENT_URL = process.env.CLIENT_URL;
 const userService = {
     // Create user

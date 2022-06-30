@@ -15,7 +15,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const user_service_1 = __importDefault(require("../services/user.service"));
 const userController = {
     // POST: Login
-    login(req, res, next) {
+    loginHandler(req, res, next) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const user = yield user_service_1.default.loginUser(req.body);
@@ -27,7 +27,7 @@ const userController = {
         });
     },
     // POST: Register
-    register(req, res, next) {
+    registerHandler(req, res, next) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const data = yield user_service_1.default.createUser(req.body);
@@ -39,7 +39,7 @@ const userController = {
         });
     },
     // POST: active account
-    activeAccount(req, res, next) {
+    activeAccountHandler(req, res, next) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const { active_token } = req.body;
@@ -52,7 +52,7 @@ const userController = {
         });
     },
     // GET: logout
-    logout(req, res, next) {
+    logoutHandler(req, res, next) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 res.clearCookie('refreshtoken', { path: `/api/v1/auth/refresh_token` });
@@ -64,7 +64,7 @@ const userController = {
         });
     },
     // PUT: change password
-    changePassword(req, res, next) {
+    changePasswordHandler(req, res, next) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const user = req.user;
@@ -76,7 +76,7 @@ const userController = {
             }
         });
     },
-    forgotPassword(req, res, next) {
+    forgotPasswordHandler(req, res, next) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const { email } = req.body;

@@ -20,6 +20,11 @@ export interface ITopic extends Document {
   _doc: object;
 }
 
+export interface INewTopic extends Document {
+  name: string;
+  thumbnail?: string;
+}
+
 export interface INewUser {
   username: string;
   email: string;
@@ -46,4 +51,11 @@ export interface IChangePassword {
 
 export interface IRequestAuth extends Request {
   user?: IUser;
+}
+
+export interface IQueryString {
+  limit?: string | number;
+  page?: string | number;
+  sort?: string;
+  search?: string;
 }

@@ -5,7 +5,7 @@ import sendEmail from '../helpers/sendEmail';
 import userModel from '../models/user.model';
 import { IChangePassword, IDecodedToken, INewUser, IUserLogin } from '../types';
 import { validateEmail } from '../utils';
-import { generateAccessToken, generateActiveToken, generateRefreshToken } from '../utils/generateToken';
+import { generateAccessToken, generateActiveToken, generateRefreshToken } from '../helpers/generateToken';
 
 const CLIENT_URL = process.env.CLIENT_URL;
 const userService = {

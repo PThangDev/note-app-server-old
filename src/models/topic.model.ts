@@ -10,11 +10,18 @@ const topicSchema = new mongoose.Schema(
       unique: true,
     },
     user: {
-      type: mongoose.Types.ObjectId,
+      type: mongoose.Schema.Types.ObjectId,
+      required: true,
       ref: 'users',
+      unique: false,
     },
     thumbnail: {
       type: String,
+    },
+    slug: {
+      type: String,
+      unique: true,
+      required: true,
     },
   },
   { timestamps: true }

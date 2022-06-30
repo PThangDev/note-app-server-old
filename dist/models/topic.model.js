@@ -12,11 +12,18 @@ const topicSchema = new mongoose_1.default.Schema({
         unique: true,
     },
     user: {
-        type: mongoose_1.default.Types.ObjectId,
+        type: mongoose_1.default.Schema.Types.ObjectId,
+        required: true,
         ref: 'users',
+        unique: false,
     },
     thumbnail: {
         type: String,
+    },
+    slug: {
+        type: String,
+        unique: true,
+        required: true,
     },
 }, { timestamps: true });
 exports.default = mongoose_1.default.model('topics', topicSchema);
