@@ -1,6 +1,6 @@
 import { IQueryString } from '../types';
 
-class FeaturesAPI {
+class QueryAPI {
   constructor(public query: any, private queryString: IQueryString) {}
   pagination() {
     const limit = Number(this.queryString.limit) || 100;
@@ -12,4 +12,4 @@ class FeaturesAPI {
   }
 }
 
-export default FeaturesAPI;
+export default QueryAPI;

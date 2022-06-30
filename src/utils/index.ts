@@ -16,3 +16,9 @@ export const validateAccount = (account: string) => {
   const regex = /^(?:[A-Z\d][A-Z\d_-]{5,10}|[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4})$/i;
   return regex.test(String(account).toLocaleLowerCase());
 };
+
+// export const removeEmptyField = <T = {}>(data: T) => {
+//   return Object.keys(data).forEach((key) =>
+//     data[key as string] === undefined || data[key as string].trim() === '' ? delete data[key as string] : {}
+//   );
+// };

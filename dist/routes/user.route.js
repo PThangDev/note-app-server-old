@@ -8,26 +8,26 @@ const user_controller_1 = __importDefault(require("../controllers/user.controlle
 const auth_middleware_1 = __importDefault(require("../middlewares/auth.middleware"));
 const validateRequest_middleware_1 = require("../middlewares/validateRequest.middleware");
 const validateRequest_middleware_2 = require("./../middlewares/validateRequest.middleware");
-const router = express_1.default.Router();
+const userRouter = express_1.default.Router();
 // Login
 // POST: /api/v1/auth/login
-router.post('/login', validateRequest_middleware_1.validateLogin, user_controller_1.default.loginHandler);
+userRouter.post('/login', validateRequest_middleware_1.validateLogin, user_controller_1.default.loginHandler);
 // Register
 // POST: /api/v1/auth/register
-router.post('/register', validateRequest_middleware_1.validateResgier, user_controller_1.default.registerHandler);
+userRouter.post('/register', validateRequest_middleware_1.validateResgier, user_controller_1.default.registerHandler);
 // Logout
 // POST: /api/v1/auth/sessions
-router.post('/sessions', () => { });
+userRouter.post('/sessions', () => { });
 // Active account
 // POST: /api/v1/auth/active
-router.post('/active', user_controller_1.default.activeAccountHandler);
+userRouter.post('/active', user_controller_1.default.activeAccountHandler);
 // Logout
 // GET: /api/v1/auth/logout
-router.post('/logout', user_controller_1.default.logoutHandler);
+userRouter.post('/logout', user_controller_1.default.logoutHandler);
 // Change password
 // PUT: /api/v1/auth/change-password
-router.put('/change-password', auth_middleware_1.default, validateRequest_middleware_2.validateChangePassword, user_controller_1.default.changePasswordHandler);
+userRouter.put('/change-password', auth_middleware_1.default, validateRequest_middleware_2.validateChangePassword, user_controller_1.default.changePasswordHandler);
 // Forgot Password
 // GET: /api/v1/auth/forgot-password
-router.post('/forgot-password', validateRequest_middleware_2.validateForgotPassword, user_controller_1.default.forgotPasswordHandler);
-exports.default = router;
+userRouter.post('/forgot-password', validateRequest_middleware_2.validateForgotPassword, user_controller_1.default.forgotPasswordHandler);
+exports.default = userRouter;

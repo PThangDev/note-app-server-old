@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-class FeaturesAPI {
+class QueryAPI {
     constructor(query, queryString) {
         this.query = query;
         this.queryString = queryString;
@@ -13,4 +13,4 @@ class FeaturesAPI {
         return this;
     }
 }
-exports.default = FeaturesAPI;
+exports.default = QueryAPI;

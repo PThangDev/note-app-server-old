@@ -20,3 +20,8 @@ const validateAccount = (account) => {
     return regex.test(String(account).toLocaleLowerCase());
 };
 exports.validateAccount = validateAccount;
+// export const removeEmptyField = <T = {}>(data: T) => {
+//   return Object.keys(data).forEach((key) =>
+//     data[key as string] === undefined || data[key as string].trim() === '' ? delete data[key as string] : {}
+//   );
+// };

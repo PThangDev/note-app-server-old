@@ -25,6 +25,7 @@ const userSchema = new mongoose.Schema(
       enum: ['register', 'google', 'facebook'],
       default: 'register',
     },
+    slug: { type: String, required: true },
   },
   { timestamps: true }
 );

@@ -20,6 +20,17 @@ export interface ITopic extends Document {
   _doc: object;
 }
 
+export interface INote extends Document {
+  _id: string;
+  user: string;
+  topic: string;
+  thumbnail: string;
+  background: string;
+  title: string;
+  content: string;
+  _doc: object;
+}
+
 export interface INewTopic extends Document {
   name: string;
   thumbnail?: string;

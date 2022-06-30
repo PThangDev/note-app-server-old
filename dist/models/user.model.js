@@ -24,6 +24,7 @@ const userSchema = new mongoose_1.default.Schema({
         enum: ['register', 'google', 'facebook'],
         default: 'register',
     },
+    slug: { type: String, required: true },
 }, { timestamps: true });
 // Middlewares
 // userSchema.methods.comparePassword = async function (candidatePassword: string) {

@@ -6,17 +6,17 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const topic_controller_1 = __importDefault(require("../controllers/topic.controller"));
 const auth_middleware_1 = __importDefault(require("../middlewares/auth.middleware"));
-const router = express_1.default.Router();
+const topicRouter = express_1.default.Router();
 // GET
 // Topics
-router.get('/', auth_middleware_1.default, topic_controller_1.default.getTopicsHandler);
+topicRouter.get('/', auth_middleware_1.default, topic_controller_1.default.getTopicsHandler);
 // POST
 // Create new topic
-router.post('/', auth_middleware_1.default, topic_controller_1.default.createTopicHandler);
+topicRouter.post('/', auth_middleware_1.default, topic_controller_1.default.createTopicHandler);
 // PUT
 // Update topic by slug
-router.put('/:slug', auth_middleware_1.default, topic_controller_1.default.updateTopicHandler);
+topicRouter.put('/:slug', auth_middleware_1.default, topic_controller_1.default.updateTopicHandler);
 // DELETE
 // Delete topic by slug
-router.delete('/:slug', auth_middleware_1.default, topic_controller_1.default.deleteTopicHandler);
-exports.default = router;
+topicRouter.delete('/:slug', auth_middleware_1.default, topic_controller_1.default.deleteTopicHandler);
+exports.default = topicRouter;

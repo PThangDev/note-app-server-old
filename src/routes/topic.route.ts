@@ -2,19 +2,19 @@ import express from 'express';
 import topicController from '../controllers/topic.controller';
 import authMiddleware from '../middlewares/auth.middleware';
 
-const router = express.Router();
+const topicRouter = express.Router();
 
 // GET
 // Topics
-router.get('/', authMiddleware, topicController.getTopicsHandler);
+topicRouter.get('/', authMiddleware, topicController.getTopicsHandler);
 // POST
 // Create new topic
-router.post('/', authMiddleware, topicController.createTopicHandler);
+topicRouter.post('/', authMiddleware, topicController.createTopicHandler);
 // PUT
 // Update topic by slug
-router.put('/:slug', authMiddleware, topicController.updateTopicHandler);
+topicRouter.put('/:slug', authMiddleware, topicController.updateTopicHandler);
 // DELETE
 // Delete topic by slug
-router.delete('/:slug', authMiddleware, topicController.deleteTopicHandler);
+topicRouter.delete('/:slug', authMiddleware, topicController.deleteTopicHandler);
 
-export default router;
+export default topicRouter;
