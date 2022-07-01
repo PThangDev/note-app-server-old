@@ -30,6 +30,14 @@ export interface INote extends Document {
   content: string;
   _doc: object;
 }
+export interface INoteUpdate {
+  title?: string;
+  thumbnail?: string;
+  background?: string;
+  content?: string;
+  topic?: string;
+  slug?: string;
+}
 
 export interface INewTopic extends Document {
   name: string;

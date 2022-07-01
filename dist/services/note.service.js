@@ -22,7 +22,10 @@ const noteService = {
         var _a;
         return __awaiter(this, void 0, void 0, function* () {
             const { limit, page, sort, search } = req.body;
-            const response = new QueryAPI_1.default(note_model_1.default.find({ user: (_a = req.user) === null || _a === void 0 ? void 0 : _a._id }).populate({ path: 'user', select: '-password' }), { limit, page, sort, search });
+            const response = new QueryAPI_1.default(note_model_1.default
+                .find({ user: (_a = req.user) === null || _a === void 0 ? void 0 : _a._id })
+                .populate({ path: 'user', select: '-password' })
+                .populate({ path: 'topic' }), { limit, page, sort, search });
             const topics = yield response.query;
             return topics;
         });
@@ -48,7 +51,20 @@ const noteService = {
     // Update note
     updateNote(req) {
         return __awaiter(this, void 0, void 0, function* () {
-            const data = Object.assign({}, req.body);
+            const { title, content, thumbnail, background, topic } = req.body;
+            const { id } = req.params;
+            const data = { title, content, thumbnail, background, topic, slug: '' };
+            Object.keys(data).forEach((key) => {
+                var _a;
+                return data[key] === undefined || ((_a = data[key]) === null || _a === void 0 ? void 0 : _a.trim()) === ''
+                    ? delete data[key]
+                    : {};
+            });
+            if (data.hasOwnProperty('title')) {
+                data.slug = (0, createSlug_1.default)(data.title);
+            }
+            const noteUpdated = yield note_model_1.default.findByIdAndUpdate(id, data, { new: true });
+            return noteUpdated;
         });
     },
     // Delete 1 note

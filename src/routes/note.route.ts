@@ -10,6 +10,9 @@ noteRouter.get('/', authMiddleware, noteController.getNotesHandler);
 // POST
 // api/v1/notes
 noteRouter.post('/', authMiddleware, noteController.createNoteHandler);
+// PUT
+// api/v1/notes/:id
+noteRouter.put('/:id', authMiddleware, noteController.updateNoteHandler);
 // DELETE
 // api/v1/notes/:id
 noteRouter.delete('/:id', authMiddleware, noteController.deleteNoteHandler);

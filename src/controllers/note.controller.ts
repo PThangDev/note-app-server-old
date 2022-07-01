@@ -21,6 +21,15 @@ const noteController = {
       next(error);
     }
   },
+  // PUT Update note
+  async updateNoteHandler(req: IRequestAuth, res: Response, next: NextFunction) {
+    try {
+      const noteUpdated = await noteService.updateNote(req);
+      return res.status(200).json({ data: noteUpdated, message: 'Update note successfully' });
+    } catch (error) {
+      next(error);
+    }
+  },
   // DELETE delete 1 note
   async deleteNoteHandler(req: IRequestAuth, res: Response, next: NextFunction) {
     try {

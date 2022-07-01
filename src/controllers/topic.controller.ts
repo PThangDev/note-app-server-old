@@ -15,7 +15,7 @@ const topicController = {
   async createTopicHandler(req: Request, res: Response, next: NextFunction) {
     try {
       const newTopic = await topicService.createTopic(req);
-      return res.status(200).json({ data: newTopic, message: 'Create new topic successfully' });
+      return res.status(201).json({ data: newTopic, message: 'Create new topic successfully' });
     } catch (error) {
       next(error);
     }

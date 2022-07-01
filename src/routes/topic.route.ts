@@ -15,6 +15,6 @@ topicRouter.post('/', authMiddleware, topicController.createTopicHandler);
 topicRouter.put('/:slug', authMiddleware, topicController.updateTopicHandler);
 // DELETE
 // Delete topic by slug
-topicRouter.delete('/:slug', authMiddleware, topicController.deleteTopicHandler);
+topicRouter.delete('/:id', authMiddleware, topicController.deleteTopicHandler);
 
 export default topicRouter;

@@ -9,6 +9,9 @@ const errorHandlingMiddleware: ErrorRequestHandler = (err, req, res, next) => {
     const fieldError = Object.keys(err.keyValue)[0];
     return res.status(status).json({ message: `${uppercaseFirstLetter(fieldError)} has already exists` });
   }
+  if (err.path === '_id') {
+    return res.status(status).json({ message: 'Invalid Id. Please try again' });
+  }
   return res.status(status).json({ errors: err });
 };
 export default errorHandlingMiddleware;

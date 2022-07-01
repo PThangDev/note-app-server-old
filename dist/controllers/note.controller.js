@@ -38,6 +38,18 @@ const noteController = {
             }
         });
     },
+    // PUT Update note
+    updateNoteHandler(req, res, next) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const noteUpdated = yield note_service_1.default.updateNote(req);
+                return res.status(200).json({ data: noteUpdated, message: 'Update note successfully' });
+            }
+            catch (error) {
+                next(error);
+            }
+        });
+    },
     // DELETE delete 1 note
     deleteNoteHandler(req, res, next) {
         return __awaiter(this, void 0, void 0, function* () {

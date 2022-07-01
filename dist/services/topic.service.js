@@ -16,6 +16,7 @@ const QueryAPI_1 = __importDefault(require("../helpers/QueryAPI"));
 const topic_model_1 = __importDefault(require("../models/topic.model"));
 const http_errors_1 = __importDefault(require("http-errors"));
 const createSlug_1 = __importDefault(require("../helpers/createSlug"));
+const note_model_1 = __importDefault(require("../models/note.model"));
 const topicService = {
     getTopics(req) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -64,9 +65,9 @@ const topicService = {
     deleteTopic(req) {
         return __awaiter(this, void 0, void 0, function* () {
             const { user } = req;
-            const data = Object.assign({}, req.body);
-            const { slug } = req.params;
-            const topicDeleted = yield topic_model_1.default.findOneAndDelete({ slug, user: user === null || user === void 0 ? void 0 : user._id }, data);
+            const { id } = req.params;
+            const topicDeleted = yield topic_model_1.default.findOneAndDelete({ _id: id, user: user === null || user === void 0 ? void 0 : user._id });
+            yield note_model_1.default.deleteMany({ topic: id, user: user === null || user === void 0 ? void 0 : user._id });
             if (!topicDeleted)
                 throw (0, http_errors_1.default)(404, 'Topic does not exists');
             return topicDeleted;

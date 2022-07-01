@@ -13,6 +13,9 @@ noteRouter.get('/', auth_middleware_1.default, note_controller_1.default.getNote
 // POST
 // api/v1/notes
 noteRouter.post('/', auth_middleware_1.default, note_controller_1.default.createNoteHandler);
+// PUT
+// api/v1/notes/:id
+noteRouter.put('/:id', auth_middleware_1.default, note_controller_1.default.updateNoteHandler);
 // DELETE
 // api/v1/notes/:id
 noteRouter.delete('/:id', auth_middleware_1.default, note_controller_1.default.deleteNoteHandler);

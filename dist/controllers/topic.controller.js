@@ -31,7 +31,7 @@ const topicController = {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const newTopic = yield topic_service_1.default.createTopic(req);
-                return res.status(200).json({ data: newTopic, message: 'Create new topic successfully' });
+                return res.status(201).json({ data: newTopic, message: 'Create new topic successfully' });
             }
             catch (error) {
                 next(error);

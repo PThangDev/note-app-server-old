@@ -4,6 +4,7 @@ import topicModel from '../models/topic.model';
 import { IRequestAuth } from '../types';
 import createErrors from 'http-errors';
 import createSlug from '../helpers/createSlug';
+import noteModel from '../models/note.model';
 
 const topicService = {
   async getTopics(req: IRequestAuth) {
@@ -55,10 +56,10 @@ const topicService = {
   },
   async deleteTopic(req: IRequestAuth) {
     const { user } = req;
-    const data = { ...req.body };
-    const { slug } = req.params;
+    const { id } = req.params;
 
-    const topicDeleted = await topicModel.findOneAndDelete({ slug, user: user?._id }, data);
+    const topicDeleted = await topicModel.findOneAndDelete({ _id: id, user: user?._id });
+    await noteModel.deleteMany({ topic: id, user: user?._id });
 
     if (!topicDeleted) throw createErrors(404, 'Topic does not exists');
 
