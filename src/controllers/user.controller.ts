@@ -8,7 +8,7 @@ const userController = {
     try {
       const user = await userService.loginUser(req.body);
 
-      return res.status(201).json({ user, message: 'Login successfully' });
+      return res.status(201).json({ data: user, message: 'Login successfully' });
     } catch (error) {
       next(error);
     }
