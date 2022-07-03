@@ -2,6 +2,9 @@ import { Request } from 'express';
 
 export type TypeLogin = 'register' | 'google' | 'facebook';
 export type RoleUser = 'admin' | 'customer';
+export type StatusUser = 'pending' | 'active' | 'banned';
+
+export type TypeNote = 'default' | 'pin' | 'trash';
 
 export interface IUser extends Document {
   _id: string;
@@ -11,6 +14,7 @@ export interface IUser extends Document {
   avatar: string;
   role: RoleUser;
   type: TypeLogin;
+  status: StatusUser;
   _doc: object;
 }
 export interface ITopic extends Document {
@@ -23,11 +27,12 @@ export interface ITopic extends Document {
 export interface INote extends Document {
   _id: string;
   user: string;
-  topic: string;
+  topics: ITopic[];
   thumbnail: string;
   background: string;
   title: string;
   content: string;
+  type: TypeNote;
   _doc: object;
 }
 export interface INoteUpdate {
@@ -35,8 +40,9 @@ export interface INoteUpdate {
   thumbnail?: string;
   background?: string;
   content?: string;
-  topic?: string;
+  topics?: string;
   slug?: string;
+  type?: TypeNote;
 }
 
 export interface INewTopic extends Document {

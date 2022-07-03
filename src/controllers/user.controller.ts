@@ -7,8 +7,7 @@ const userController = {
   async loginHandler(req: Request, res: Response, next: NextFunction) {
     try {
       const user = await userService.loginUser(req.body);
-
-      return res.status(201).json({ data: user, message: 'Login successfully' });
+      return res.status(200).json({ data: user, message: 'Login successfully' });
     } catch (error) {
       next(error);
     }
@@ -18,7 +17,7 @@ const userController = {
     try {
       const data = await userService.createUser(req.body);
 
-      return res.status(200).json({ data, message: 'Register successfully. Please check your email' });
+      return res.status(201).json({ data, message: 'Register successfully. Please check your email' });
     } catch (error) {
       next(error);
     }
@@ -26,7 +25,7 @@ const userController = {
   // POST: active account
   async activeAccountHandler(req: Request, res: Response, next: NextFunction) {
     try {
-      const { active_token } = req.body;
+      const { active_token } = req.params;
       await userService.activeAccount(active_token);
       return res.status(200).json({ message: 'Account has been activated' });
     } catch (error) {

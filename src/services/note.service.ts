@@ -13,11 +13,11 @@ const noteService = {
       noteModel
         .find({ user: req.user?._id })
         .populate({ path: 'user', select: '-password' })
-        .populate({ path: 'topic' }),
+        .populate({ path: 'topics' }),
       { limit, page, sort, search }
     );
-    const topics = await response.query;
-    return topics;
+    const notes = await response.query;
+    return notes;
   },
 
   // Create Notes
@@ -38,13 +38,13 @@ const noteService = {
   },
   // Update note
   async updateNote(req: IRequestAuth) {
-    const { title, content, thumbnail, background, topic } = req.body;
+    const { title, content, thumbnail, background, topics, type } = req.body;
     const { id } = req.params;
 
-    const data: INoteUpdate = { title, content, thumbnail, background, topic, slug: '' };
+    const data: INoteUpdate = { title, content, thumbnail, background, topics, slug: '', type };
 
     Object.keys(data).forEach((key) =>
-      data[<keyof INoteUpdate>key] === undefined || data[<keyof INoteUpdate>key]?.trim() === ''
+      data[<keyof INoteUpdate>key] === undefined || data[<keyof INoteUpdate>key] === ''
         ? delete data[<keyof INoteUpdate>key]
         : {}
     );

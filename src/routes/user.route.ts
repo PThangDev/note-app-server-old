@@ -16,12 +16,12 @@ userRouter.post('/register', validateResgier, userController.registerHandler);
 // POST: /api/v1/auth/sessions
 userRouter.post('/sessions', () => {});
 // Active account
-// POST: /api/v1/auth/active
-userRouter.post('/active', userController.activeAccountHandler);
+// GET: /api/v1/auth/active
+userRouter.get('/active/:active_token', userController.activeAccountHandler);
 
 // Logout
 // GET: /api/v1/auth/logout
-userRouter.post('/logout', userController.logoutHandler);
+userRouter.get('/logout', userController.logoutHandler);
 // Change password
 // PUT: /api/v1/auth/change-password
 userRouter.put(

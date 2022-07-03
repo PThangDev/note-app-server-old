@@ -25,6 +25,10 @@ const userSchema = new mongoose.Schema(
       enum: ['register', 'google', 'facebook'],
       default: 'register',
     },
+    status: {
+      type: String,
+      enum: ['pending', 'active', 'banned'],
+    },
     slug: { type: String, required: true },
   },
   { timestamps: true }

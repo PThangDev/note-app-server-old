@@ -13,14 +13,21 @@ const userService = {
   // Create user
   async createUser(data: INewUser) {
     const { username, email, password } = data;
+    const userByUsername = await userModel.findOne({ username });
+    if (userByUsername) throw createErrors(400, 'Username has already exist');
+
+    const userByEmail = await userModel.findOne({ email });
+    if (userByEmail) throw createErrors(400, 'Email has already exist');
+
     const passwordHash = await bcrypt.hash(password, 12);
 
     const active_token = generateActiveToken({
       newUser: { username, email, password: passwordHash, slug: createSlug(username) },
     });
 
-    const url = `${CLIENT_URL}/active/${active_token}`;
-    await sendEmail(email, url, 'Verify your email address');
+    const url = `${CLIENT_URL}/auth/active/${active_token}`;
+    // Send url token to email
+    // await sendEmail(email, url, 'Verify your email address');
 
     return { url, active_token };
   },
@@ -39,9 +46,9 @@ const userService = {
     }
     // Compare password
     const isMatchPassword = await bcrypt.compare(password, user.password);
-    if (!isMatchPassword) {
-      throw createErrors(400, 'Password is incorrect');
-    }
+
+    if (!isMatchPassword) throw createErrors(400, 'Password is incorrect');
+
     const access_token = generateAccessToken({ _id: user._id });
     const refresh_token = generateRefreshToken({ _id: user._id });
     return { ...user._doc, access_token, refresh_token, password: '' };
@@ -77,7 +84,7 @@ const userService = {
     const access_token = generateAccessToken({ _id: user._id });
     const url = `${CLIENT_URL}/reset-password/${access_token}`;
 
-    await sendEmail(email, url, 'Forgot password?');
+    // await sendEmail(email, url, 'Forgot password?');
     return access_token;
   },
 };

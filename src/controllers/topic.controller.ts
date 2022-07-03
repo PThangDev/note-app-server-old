@@ -6,7 +6,7 @@ const topicController = {
   async getTopicsHandler(req: Request, res: Response, next: NextFunction) {
     try {
       const topics = await topicService.getTopics(req);
-      return res.status(200).json({ topics });
+      return res.status(200).json({ data: topics, message: 'Get topics successfully' });
     } catch (error) {
       next(error);
     }

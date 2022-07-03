@@ -8,7 +8,7 @@ const noteSchema = new mongoose.Schema(
       required: true,
       ref: 'users',
     },
-    topic: { type: mongoose.Schema.Types.ObjectId, ref: 'topics' },
+    topics: [{ type: mongoose.Schema.Types.ObjectId, ref: 'topics' }],
     title: {
       type: String,
       required: true,
@@ -23,6 +23,11 @@ const noteSchema = new mongoose.Schema(
     slug: {
       type: String,
       required: true,
+    },
+    type: {
+      type: String,
+      enum: ['default', 'pin', 'trash'],
+      default: 'default',
     },
   },
   { timestamps: true }
