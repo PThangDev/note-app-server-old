@@ -33,4 +33,6 @@ const noteSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
+noteSchema.index({ title: 'text', content: 'text' }, { default_language: 'none' });
+
 export default mongoose.model<INote>('notes', noteSchema);

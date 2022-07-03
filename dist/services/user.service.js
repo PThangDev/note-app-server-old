@@ -15,7 +15,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const bcrypt_1 = __importDefault(require("bcrypt"));
 const http_errors_1 = __importDefault(require("http-errors"));
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
-const sendEmail_1 = __importDefault(require("../helpers/sendEmail"));
 const user_model_1 = __importDefault(require("../models/user.model"));
 const utils_1 = require("../utils");
 const generateToken_1 = require("../helpers/generateToken");
@@ -26,12 +25,19 @@ const userService = {
     createUser(data) {
         return __awaiter(this, void 0, void 0, function* () {
             const { username, email, password } = data;
+            const userByUsername = yield user_model_1.default.findOne({ username });
+            if (userByUsername)
+                throw (0, http_errors_1.default)(400, 'Username has already exist');
+            const userByEmail = yield user_model_1.default.findOne({ email });
+            if (userByEmail)
+                throw (0, http_errors_1.default)(400, 'Email has already exist');
             const passwordHash = yield bcrypt_1.default.hash(password, 12);
             const active_token = (0, generateToken_1.generateActiveToken)({
                 newUser: { username, email, password: passwordHash, slug: (0, createSlug_1.default)(username) },
             });
-            const url = `${CLIENT_URL}/active/${active_token}`;
-            yield (0, sendEmail_1.default)(email, url, 'Verify your email address');
+            const url = `${CLIENT_URL}/auth/active/${active_token}`;
+            // Send url token to email
+            // await sendEmail(email, url, 'Verify your email address');
             return { url, active_token };
         });
     },
@@ -52,9 +58,8 @@ const userService = {
             }
             // Compare password
             const isMatchPassword = yield bcrypt_1.default.compare(password, user.password);
-            if (!isMatchPassword) {
+            if (!isMatchPassword)
                 throw (0, http_errors_1.default)(400, 'Password is incorrect');
-            }
             const access_token = (0, generateToken_1.generateAccessToken)({ _id: user._id });
             const refresh_token = (0, generateToken_1.generateRefreshToken)({ _id: user._id });
             return Object.assign(Object.assign({}, user._doc), { access_token, refresh_token, password: '' });
@@ -89,7 +94,7 @@ const userService = {
                 throw (0, http_errors_1.default)(400, `Quick login account with ${user.type} can't use this function.`);
             const access_token = (0, generateToken_1.generateAccessToken)({ _id: user._id });
             const url = `${CLIENT_URL}/reset-password/${access_token}`;
-            yield (0, sendEmail_1.default)(email, url, 'Forgot password?');
+            // await sendEmail(email, url, 'Forgot password?');
             return access_token;
         });
     },

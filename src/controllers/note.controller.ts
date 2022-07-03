@@ -6,8 +6,8 @@ const noteController = {
   //GET
   async getNotesHandler(req: IRequestAuth, res: Response, next: NextFunction) {
     try {
-      const notes = await noteService.getNotes(req);
-      return res.status(200).json({ data: notes, message: 'Get topics successfully' });
+      const { notes, pagination } = await noteService.getNotes(req);
+      return res.status(200).json({ data: notes, pagination, message: 'Get topics successfully' });
     } catch (error) {
       next(error);
     }

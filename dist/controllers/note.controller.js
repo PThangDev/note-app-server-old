@@ -18,11 +18,11 @@ const noteController = {
     getNotesHandler(req, res, next) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const topics = yield note_service_1.default.getNotes(req);
-                return res.status(200).json({ data: topics, message: 'Get topics successfully' });
+                const { notes, pagination } = yield note_service_1.default.getNotes(req);
+                return res.status(200).json({ data: notes, pagination, message: 'Get topics successfully' });
             }
             catch (error) {
-                throw next(error);
+                next(error);
             }
         });
     },

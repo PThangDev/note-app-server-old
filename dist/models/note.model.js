@@ -10,7 +10,7 @@ const noteSchema = new mongoose_1.default.Schema({
         required: true,
         ref: 'users',
     },
-    topic: { type: mongoose_1.default.Schema.Types.ObjectId, ref: 'topics' },
+    topics: [{ type: mongoose_1.default.Schema.Types.ObjectId, ref: 'topics' }],
     title: {
         type: String,
         required: true,
@@ -26,5 +26,11 @@ const noteSchema = new mongoose_1.default.Schema({
         type: String,
         required: true,
     },
+    type: {
+        type: String,
+        enum: ['default', 'pin', 'trash'],
+        default: 'default',
+    },
 }, { timestamps: true });
+noteSchema.index({ title: 'text', content: 'text' }, { default_language: 'none' });
 exports.default = mongoose_1.default.model('notes', noteSchema);

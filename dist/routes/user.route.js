@@ -19,11 +19,11 @@ userRouter.post('/register', validateRequest_middleware_1.validateResgier, user_
 // POST: /api/v1/auth/sessions
 userRouter.post('/sessions', () => { });
 // Active account
-// POST: /api/v1/auth/active
-userRouter.post('/active', user_controller_1.default.activeAccountHandler);
+// GET: /api/v1/auth/active
+userRouter.get('/active/:active_token', user_controller_1.default.activeAccountHandler);
 // Logout
 // GET: /api/v1/auth/logout
-userRouter.post('/logout', user_controller_1.default.logoutHandler);
+userRouter.get('/logout', user_controller_1.default.logoutHandler);
 // Change password
 // PUT: /api/v1/auth/change-password
 userRouter.put('/change-password', auth_middleware_1.default, validateRequest_middleware_2.validateChangePassword, user_controller_1.default.changePasswordHandler);

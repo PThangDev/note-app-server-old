@@ -19,7 +19,7 @@ const userController = {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const user = yield user_service_1.default.loginUser(req.body);
-                return res.status(201).json({ user, message: 'Login successfully' });
+                return res.status(200).json({ data: user, message: 'Login successfully' });
             }
             catch (error) {
                 next(error);
@@ -31,7 +31,7 @@ const userController = {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const data = yield user_service_1.default.createUser(req.body);
-                return res.status(200).json({ data, message: 'Register successfully. Please check your email' });
+                return res.status(201).json({ data, message: 'Register successfully. Please check your email' });
             }
             catch (error) {
                 next(error);
@@ -42,7 +42,7 @@ const userController = {
     activeAccountHandler(req, res, next) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const { active_token } = req.body;
+                const { active_token } = req.params;
                 yield user_service_1.default.activeAccount(active_token);
                 return res.status(200).json({ message: 'Account has been activated' });
             }

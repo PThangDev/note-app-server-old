@@ -24,6 +24,10 @@ const userSchema = new mongoose_1.default.Schema({
         enum: ['register', 'google', 'facebook'],
         default: 'register',
     },
+    status: {
+        type: String,
+        enum: ['pending', 'active', 'banned'],
+    },
     slug: { type: String, required: true },
 }, { timestamps: true });
 // Middlewares

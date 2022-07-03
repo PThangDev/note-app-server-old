@@ -19,7 +19,7 @@ const topicController = {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const topics = yield topic_service_1.default.getTopics(req);
-                return res.status(200).json({ topics });
+                return res.status(200).json({ data: topics, message: 'Get topics successfully' });
             }
             catch (error) {
                 next(error);

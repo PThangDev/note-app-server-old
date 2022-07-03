@@ -21,27 +21,45 @@ const noteService = {
     getNotes(req) {
         var _a;
         return __awaiter(this, void 0, void 0, function* () {
-            const { limit, page, sort, search } = req.body;
+            const { limit, page, sort, search } = req.query;
+            const filter = {
+                user: (_a = req.user) === null || _a === void 0 ? void 0 : _a._id,
+            };
+            if (search) {
+                filter['$text'] = { $search: search };
+            }
             const response = new QueryAPI_1.default(note_model_1.default
-                .find({ user: (_a = req.user) === null || _a === void 0 ? void 0 : _a._id })
+                .find(filter)
                 .populate({ path: 'user', select: '-password' })
-                .populate({ path: 'topic' }), { limit, page, sort, search });
-            const topics = yield response.query;
-            return topics;
+                .populate({ path: 'topics' }), { limit, page, sort, search })
+                .pagination()
+                .sortable();
+            const [notes, totalItems] = yield Promise.all([
+                response.query,
+                note_model_1.default.countDocuments(filter),
+            ]);
+            const pageCount = Math.ceil(totalItems / Number(limit)) || 1;
+            const pagination = {
+                limit: Number(limit),
+                total: totalItems,
+                pageSize: notes.length,
+                pageCount,
+            };
+            return { notes, pagination };
         });
     },
     // Create Notes
     createNotes(req) {
         var _a;
         return __awaiter(this, void 0, void 0, function* () {
-            const { title, content, thumbnail, topic, background } = req.body;
+            const { title, content, thumbnail, topics, background } = req.body;
             const newNote = new note_model_1.default({
                 title,
                 content,
                 thumbnail,
                 background,
                 user: (_a = req.user) === null || _a === void 0 ? void 0 : _a._id,
-                topic,
+                topics,
                 slug: (0, createSlug_1.default)(title),
             });
             yield newNote.save();
@@ -51,15 +69,12 @@ const noteService = {
     // Update note
     updateNote(req) {
         return __awaiter(this, void 0, void 0, function* () {
-            const { title, content, thumbnail, background, topic } = req.body;
+            const { title, content, thumbnail, background, topics, type } = req.body;
             const { id } = req.params;
-            const data = { title, content, thumbnail, background, topic, slug: '' };
-            Object.keys(data).forEach((key) => {
-                var _a;
-                return data[key] === undefined || ((_a = data[key]) === null || _a === void 0 ? void 0 : _a.trim()) === ''
-                    ? delete data[key]
-                    : {};
-            });
+            const data = { title, content, thumbnail, background, topics, slug: '', type };
+            Object.keys(data).forEach((key) => data[key] === undefined || data[key] === ''
+                ? delete data[key]
+                : {});
             if (data.hasOwnProperty('title')) {
                 data.slug = (0, createSlug_1.default)(data.title);
             }

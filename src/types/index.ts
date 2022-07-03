@@ -73,14 +73,13 @@ export interface IChangePassword {
   oldPassword: string;
   newPassword: string;
 }
-
-export interface IRequestAuth extends Request {
-  user?: IUser;
-}
-
 export interface IQueryString {
   limit?: string | number;
   page?: string | number;
   sort?: string;
   search?: string;
+}
+
+export interface IRequestAuth extends Request {
+  user?: IUser;
 }

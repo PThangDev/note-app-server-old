@@ -2,27 +2,49 @@ import createErrors from 'http-errors';
 import createSlug from '../helpers/createSlug';
 import QueryAPI from '../helpers/QueryAPI';
 import noteModel from '../models/note.model';
-import { INoteUpdate, IRequestAuth } from '../types';
+import { INoteUpdate, IQueryString, IRequestAuth } from '../types';
 
 const noteService = {
   // GET Notes
   async getNotes(req: IRequestAuth) {
-    const { limit, page, sort, search } = req.body;
+    const { limit, page, sort, search } = <IQueryString>req.query;
+
+    const filter: { [key: string]: any } = {
+      user: req.user?._id,
+    };
+
+    if (search) {
+      filter['$text'] = { $search: search };
+    }
 
     const response = new QueryAPI(
       noteModel
-        .find({ user: req.user?._id })
+        .find(filter)
         .populate({ path: 'user', select: '-password' })
         .populate({ path: 'topics' }),
       { limit, page, sort, search }
-    );
-    const notes = await response.query;
-    return notes;
+    )
+      .pagination()
+      .sortable();
+
+    const [notes, totalItems] = await Promise.all([
+      response.query,
+      noteModel.countDocuments(filter),
+    ]);
+    const pageCount = Math.ceil(totalItems / Number(limit)) || 1;
+
+    const pagination = {
+      limit: Number(limit),
+      total: totalItems,
+      pageSize: notes.length,
+      pageCount,
+    };
+    return { notes, pagination };
   },
 
   // Create Notes
   async createNotes(req: IRequestAuth) {
-    const { title, content, thumbnail, topic, background } = req.body;
+    const { title, content, thumbnail, topics, background } = req.body;
 
     const newNote = new noteModel({
       title,
@@ -30,7 +52,7 @@ const noteService = {
       thumbnail,
       background,
       user: req.user?._id,
-      topic,
+      topics,
       slug: createSlug(title),
     });
     await newNote.save();
