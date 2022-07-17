@@ -41,7 +41,12 @@ const noteService = {
     };
     return { notes, pagination };
   },
-
+  // GET note by slug
+  async getNoteBySlug(req: IRequestAuth) {
+    const { slug } = req.params;
+    const note = await noteModel.findOne({ slug });
+    return note;
+  },
   // Create Notes
   async createNotes(req: IRequestAuth) {
     const { title, content, thumbnail, topics, background } = req.body;
@@ -61,7 +66,7 @@ const noteService = {
   // Update note
   async updateNote(req: IRequestAuth) {
     const { title, content, thumbnail, background, topics, type } = req.body;
-    const { id } = req.params;
+    const { slug } = req.params;
 
     const data: INoteUpdate = { title, content, thumbnail, background, topics, slug: '', type };
 
@@ -73,13 +78,17 @@ const noteService = {
     if (data.hasOwnProperty('title')) {
       data.slug = createSlug(data.title);
     }
-    const noteUpdated = await noteModel.findByIdAndUpdate(id, data, { new: true });
+    const noteUpdated = await noteModel
+      .findOneAndUpdate({ slug, user: req.user?._id }, data, {
+        new: true,
+      })
+      .populate({ path: 'topics' });
     return noteUpdated;
   },
   // Delete 1 note
   async deleteNote(req: IRequestAuth) {
-    const { id } = req.params;
-    const noteDeleted = await noteModel.findOneAndDelete({ _id: id, user: req.user?._id });
+    const { slug } = req.params;
+    const noteDeleted = await noteModel.findOneAndDelete({ slug, user: req.user?._id });
     if (!noteDeleted) throw createErrors(404, 'Note does not exist');
     return noteDeleted;
   },

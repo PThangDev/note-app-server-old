@@ -17,16 +17,18 @@ const topicService = {
         sort,
         search,
       }
-    );
+    )
+      .pagination()
+      .sortable();
     const topics = await features.query;
     return topics;
   },
   async createTopic(req: IRequestAuth) {
     const { user } = req;
-    const { name, thumbnail } = req.body;
+    const { name, background } = req.body;
     const newTopic = new topicModel({
       name,
-      thumbnail,
+      background,
       user: user?._id,
       slug: createSlug(name),
     });

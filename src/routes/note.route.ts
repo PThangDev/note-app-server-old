@@ -7,15 +7,18 @@ const noteRouter = express.Router();
 // GET
 // api/v1/notes
 noteRouter.get('/', authMiddleware, noteController.getNotesHandler);
+// GET
+// api/v1/notes/:slug
+noteRouter.get('/:slug', authMiddleware, noteController.getNoteBySlugHandler);
 // POST
 // api/v1/notes
 noteRouter.post('/', authMiddleware, noteController.createNoteHandler);
 // PUT
-// api/v1/notes/:id
-noteRouter.put('/:id', authMiddleware, noteController.updateNoteHandler);
+// api/v1/notes/:slug
+noteRouter.put('/:slug', authMiddleware, noteController.updateNoteHandler);
 // DELETE
-// api/v1/notes/:id
-noteRouter.delete('/:id', authMiddleware, noteController.deleteNoteHandler);
+// api/v1/notes/:slug
+noteRouter.delete('/:slug', authMiddleware, noteController.deleteNoteHandler);
 // DELETE
 // api/v1/notes
 noteRouter.delete('/', authMiddleware, noteController.deleteManyNoteHandler);

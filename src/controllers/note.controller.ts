@@ -1,13 +1,26 @@
+import createErrors from 'http-errors';
 import { NextFunction, Response } from 'express';
 import noteService from '../services/note.service';
 import { IRequestAuth } from '../types';
 
 const noteController = {
-  //GET
+  //GET notes
   async getNotesHandler(req: IRequestAuth, res: Response, next: NextFunction) {
     try {
       const { notes, pagination } = await noteService.getNotes(req);
       return res.status(200).json({ data: notes, pagination, message: 'Get topics successfully' });
+    } catch (error) {
+      next(error);
+    }
+  },
+  // GET note by slug
+  async getNoteBySlugHandler(req: IRequestAuth, res: Response, next: NextFunction) {
+    try {
+      const note = await noteService.getNoteBySlug(req);
+
+      if (!note) throw createErrors(404, 'Note does not exist');
+
+      return res.status(200).json({ data: note, message: 'Get note successfully' });
     } catch (error) {
       next(error);
     }
@@ -25,6 +38,9 @@ const noteController = {
   async updateNoteHandler(req: IRequestAuth, res: Response, next: NextFunction) {
     try {
       const noteUpdated = await noteService.updateNote(req);
+
+      if (!noteUpdated) throw createErrors(400, 'Update failed. Note does not exist');
+
       return res.status(200).json({ data: noteUpdated, message: 'Update note successfully' });
     } catch (error) {
       next(error);

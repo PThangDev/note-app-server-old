@@ -15,7 +15,7 @@ const topicSchema = new mongoose.Schema(
       ref: 'users',
       unique: false,
     },
-    thumbnail: {
+    background: {
       type: String,
     },
     slug: {

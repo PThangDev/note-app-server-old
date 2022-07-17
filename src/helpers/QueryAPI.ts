@@ -13,7 +13,6 @@ class QueryAPI {
   sortable(field?: string) {
     const { sort } = this.queryString;
     this.query = sort ? this.query.sort(sort) : this.query.sort('-createdAt');
-
     return this;
   }
   search() {
