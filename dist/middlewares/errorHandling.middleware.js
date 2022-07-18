@@ -11,10 +11,12 @@ const errorHandlingMiddleware = (err, req, res, next) => {
     // If error has status code === 11000. It's mean some value has already exist in database
     if (err.code === 11000) {
         const fieldError = Object.keys(err.keyValue)[0];
-        return res.status(status).json({ message: `${(0, utils_1.uppercaseFirstLetter)(fieldError)} has already exists` });
+        return res
+            .status(status)
+            .json({ errors: { message: `${(0, utils_1.uppercaseFirstLetter)(fieldError)} has already exists` } });
     }
     if (err.path === '_id') {
-        return res.status(status).json({ message: 'Invalid Id. Please try again' });
+        return res.status(status).json({ errors: { message: 'Invalid Id. Please try again' } });
     }
     if (err.message === 'jwt expired') {
         return res

@@ -48,6 +48,14 @@ const noteService = {
             return { notes, pagination };
         });
     },
+    // GET note by slug
+    getNoteBySlug(req) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const { slug } = req.params;
+            const note = yield note_model_1.default.findOne({ slug });
+            return note;
+        });
+    },
     // Create Notes
     createNotes(req) {
         var _a;
@@ -68,9 +76,10 @@ const noteService = {
     },
     // Update note
     updateNote(req) {
+        var _a;
         return __awaiter(this, void 0, void 0, function* () {
             const { title, content, thumbnail, background, topics, type } = req.body;
-            const { id } = req.params;
+            const { slug } = req.params;
             const data = { title, content, thumbnail, background, topics, slug: '', type };
             Object.keys(data).forEach((key) => data[key] === undefined || data[key] === ''
                 ? delete data[key]
@@ -78,7 +87,11 @@ const noteService = {
             if (data.hasOwnProperty('title')) {
                 data.slug = (0, createSlug_1.default)(data.title);
             }
-            const noteUpdated = yield note_model_1.default.findByIdAndUpdate(id, data, { new: true });
+            const noteUpdated = yield note_model_1.default
+                .findOneAndUpdate({ slug, user: (_a = req.user) === null || _a === void 0 ? void 0 : _a._id }, data, {
+                new: true,
+            })
+                .populate({ path: 'topics' });
             return noteUpdated;
         });
     },
@@ -86,8 +99,8 @@ const noteService = {
     deleteNote(req) {
         var _a;
         return __awaiter(this, void 0, void 0, function* () {
-            const { id } = req.params;
-            const noteDeleted = yield note_model_1.default.findOneAndDelete({ _id: id, user: (_a = req.user) === null || _a === void 0 ? void 0 : _a._id });
+            const { slug } = req.params;
+            const noteDeleted = yield note_model_1.default.findOneAndDelete({ slug, user: (_a = req.user) === null || _a === void 0 ? void 0 : _a._id });
             if (!noteDeleted)
                 throw (0, http_errors_1.default)(404, 'Note does not exist');
             return noteDeleted;

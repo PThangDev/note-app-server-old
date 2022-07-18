@@ -26,6 +26,23 @@ class QueryAPI {
     }
     return this;
   }
+  filter() {
+    const queryObj = { ...this.queryString };
+
+    const excludedFields = ['page', 'sort', 'limit', 'search'];
+
+    excludedFields.forEach((el) => delete queryObj[el as keyof IQueryString]);
+
+    let queryStr = JSON.stringify(queryObj);
+    queryStr = queryStr.replace(/\b(gte|gt|lt|lte|regex)\b/g, (match) => '$' + match);
+
+    this.query = this.query.find(JSON.parse(queryStr));
+    return this;
+  }
+  count() {
+    this.query = this.query.count();
+    return this;
+  }
 }
 
 export default QueryAPI;

@@ -12,14 +12,29 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+const http_errors_1 = __importDefault(require("http-errors"));
 const note_service_1 = __importDefault(require("../services/note.service"));
 const noteController = {
-    //GET
+    //GET notes
     getNotesHandler(req, res, next) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const { notes, pagination } = yield note_service_1.default.getNotes(req);
                 return res.status(200).json({ data: notes, pagination, message: 'Get topics successfully' });
+            }
+            catch (error) {
+                next(error);
+            }
+        });
+    },
+    // GET note by slug
+    getNoteBySlugHandler(req, res, next) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const note = yield note_service_1.default.getNoteBySlug(req);
+                if (!note)
+                    throw (0, http_errors_1.default)(404, 'Note does not exist');
+                return res.status(200).json({ data: note, message: 'Get note successfully' });
             }
             catch (error) {
                 next(error);
@@ -43,6 +58,8 @@ const noteController = {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const noteUpdated = yield note_service_1.default.updateNote(req);
+                if (!noteUpdated)
+                    throw (0, http_errors_1.default)(400, 'Update failed. Note does not exist');
                 return res.status(200).json({ data: noteUpdated, message: 'Update note successfully' });
             }
             catch (error) {

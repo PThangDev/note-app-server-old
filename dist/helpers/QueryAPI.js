@@ -29,5 +29,9 @@ class QueryAPI {
         }
         return this;
     }
+    counter() {
+        this.query = this.query.count();
+        return this;
+    }
 }
 exports.default = QueryAPI;

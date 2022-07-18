@@ -26,7 +26,9 @@ const topicService = {
                 page,
                 sort,
                 search,
-            });
+            })
+                .pagination()
+                .sortable();
             const topics = yield features.query;
             return topics;
         });
@@ -34,10 +36,10 @@ const topicService = {
     createTopic(req) {
         return __awaiter(this, void 0, void 0, function* () {
             const { user } = req;
-            const { name, thumbnail } = req.body;
+            const { name, background } = req.body;
             const newTopic = new topic_model_1.default({
                 name,
-                thumbnail,
+                background,
                 user: user === null || user === void 0 ? void 0 : user._id,
                 slug: (0, createSlug_1.default)(name),
             });

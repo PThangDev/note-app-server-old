@@ -10,15 +10,18 @@ const noteRouter = express_1.default.Router();
 // GET
 // api/v1/notes
 noteRouter.get('/', auth_middleware_1.default, note_controller_1.default.getNotesHandler);
+// GET
+// api/v1/notes/:slug
+noteRouter.get('/:slug', auth_middleware_1.default, note_controller_1.default.getNoteBySlugHandler);
 // POST
 // api/v1/notes
 noteRouter.post('/', auth_middleware_1.default, note_controller_1.default.createNoteHandler);
 // PUT
-// api/v1/notes/:id
-noteRouter.put('/:id', auth_middleware_1.default, note_controller_1.default.updateNoteHandler);
+// api/v1/notes/:slug
+noteRouter.put('/:slug', auth_middleware_1.default, note_controller_1.default.updateNoteHandler);
 // DELETE
-// api/v1/notes/:id
-noteRouter.delete('/:id', auth_middleware_1.default, note_controller_1.default.deleteNoteHandler);
+// api/v1/notes/:slug
+noteRouter.delete('/:slug', auth_middleware_1.default, note_controller_1.default.deleteNoteHandler);
 // DELETE
 // api/v1/notes
 noteRouter.delete('/', auth_middleware_1.default, note_controller_1.default.deleteManyNoteHandler);

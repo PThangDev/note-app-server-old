@@ -26,11 +26,17 @@ const noteService = {
     )
       .pagination()
       .sortable();
-
-    const [notes, totalItems] = await Promise.all([
-      response.query,
-      noteModel.countDocuments(filter),
-    ]);
+    const counter = new QueryAPI(
+      noteModel
+        .find(filter)
+        .populate({ path: 'user', select: '-password' })
+        .populate({ path: 'topics' }),
+      { limit, page, sort, search }
+    )
+      .search()
+      .filter()
+      .count();
+    const [notes, totalItems] = await Promise.all([response.query, counter.query]);
     const pageCount = Math.ceil(totalItems / Number(limit)) || 1;
 
     const pagination = {
