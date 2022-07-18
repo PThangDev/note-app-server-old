@@ -1,4 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
+import createErrors from 'http-errors';
 import topicService from '../services/topic.service';
 
 const topicController = {
@@ -24,6 +25,9 @@ const topicController = {
   async updateTopicHandler(req: Request, res: Response, next: NextFunction) {
     try {
       const topicUpdated = await topicService.updateTopic(req);
+
+      if (!topicUpdated) throw createErrors(404, 'Topic does not exists');
+
       return res.status(200).json({ data: topicUpdated, message: 'Update topic successfully' });
     } catch (error) {
       next(error);
@@ -33,6 +37,9 @@ const topicController = {
   async deleteTopicHandler(req: Request, res: Response, next: NextFunction) {
     try {
       const topicDeleted = await topicService.deleteTopic(req);
+
+      if (!topicDeleted) throw createErrors(404, 'Topic does not exists');
+
       return res.status(200).json({ data: topicDeleted, message: 'Delete topic successfully' });
     } catch (error) {
       next(error);

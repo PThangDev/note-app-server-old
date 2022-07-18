@@ -2,6 +2,7 @@ import createErrors from 'http-errors';
 import createSlug from '../helpers/createSlug';
 import QueryAPI from '../helpers/QueryAPI';
 import noteModel from '../models/note.model';
+import topicModel from '../models/topic.model';
 import { INoteUpdate, IQueryString, IRequestAuth } from '../types';
 
 const noteService = {
@@ -53,8 +54,18 @@ const noteService = {
     const note = await noteModel.findOne({ slug });
     return note;
   },
+  async getNotesOfTopic(req: IRequestAuth) {
+    const { slug } = req.params;
+    const topic = await topicModel.findOne({ slug });
+
+    if (!topic) throw createErrors(404, 'Topic does not exist');
+
+    const notes = await noteModel.find({ topics: topic._id });
+    return notes;
+    // const notes = await noteModel.find({})
+  },
   // Create Notes
-  async createNotes(req: IRequestAuth) {
+  async createNote(req: IRequestAuth) {
     const { title, content, thumbnail, topics, background } = req.body;
 
     const newNote = new noteModel({

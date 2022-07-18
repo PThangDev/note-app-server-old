@@ -25,10 +25,18 @@ const noteController = {
       next(error);
     }
   },
+  async getNotesOfTopicHandler(req: IRequestAuth, res: Response, next: NextFunction) {
+    try {
+      const notes = await noteService.getNotesOfTopic(req);
+      return res.status(200).json({ data: notes, message: 'Get notes successfully' });
+    } catch (error) {
+      next(error);
+    }
+  },
   // POST create note
   async createNoteHandler(req: IRequestAuth, res: Response, next: NextFunction) {
     try {
-      const newNote = await noteService.createNotes(req);
+      const newNote = await noteService.createNote(req);
       return res.status(201).json({ data: newNote, message: 'Create note successfully' });
     } catch (error) {
       next(error);

@@ -10,6 +10,10 @@ noteRouter.get('/', authMiddleware, noteController.getNotesHandler);
 // GET
 // api/v1/notes/:slug
 noteRouter.get('/:slug', authMiddleware, noteController.getNoteBySlugHandler);
+// GET
+// api/v1/notes/topic/:slug
+noteRouter.get('/topic/:slug', authMiddleware, noteController.getNotesOfTopicHandler);
+
 // POST
 // api/v1/notes
 noteRouter.post('/', authMiddleware, noteController.createNoteHandler);

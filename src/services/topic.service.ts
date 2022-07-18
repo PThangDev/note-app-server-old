@@ -1,14 +1,12 @@
-import slugify from 'slugify';
-import QueryAPI from '../helpers/QueryAPI';
-import topicModel from '../models/topic.model';
-import { IRequestAuth } from '../types';
-import createErrors from 'http-errors';
 import createSlug from '../helpers/createSlug';
+import QueryAPI from '../helpers/QueryAPI';
 import noteModel from '../models/note.model';
+import topicModel from '../models/topic.model';
+import { IQueryString, IRequestAuth } from '../types';
 
 const topicService = {
   async getTopics(req: IRequestAuth) {
-    const { limit, page, sort, search } = req.body;
+    const { limit, page, sort, search } = <IQueryString>req.query;
     const features = new QueryAPI(
       topicModel.find({ user: req?.user }).populate({ path: 'user', select: '-password' }),
       {
@@ -52,8 +50,6 @@ const topicService = {
       new: true,
     });
 
-    if (!topicUpdated) throw createErrors(404, 'Topic does not exists');
-
     return topicUpdated;
   },
   async deleteTopic(req: IRequestAuth) {
@@ -62,8 +58,6 @@ const topicService = {
 
     const topicDeleted = await topicModel.findOneAndDelete({ _id: id, user: user?._id });
     await noteModel.deleteMany({ topic: id, user: user?._id });
-
-    if (!topicDeleted) throw createErrors(404, 'Topic does not exists');
 
     return topicDeleted;
   },
