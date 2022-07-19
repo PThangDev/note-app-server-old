@@ -7,7 +7,6 @@ const topicSchema = new mongoose.Schema(
       type: String,
       required: true,
       trim: true,
-      unique: true,
     },
     user: {
       type: mongoose.Schema.Types.ObjectId,
@@ -18,6 +17,7 @@ const topicSchema = new mongoose.Schema(
     background: {
       type: String,
     },
+    notes: [{ type: mongoose.Schema.Types.ObjectId, ref: 'notes', unique: true }],
     slug: {
       type: String,
       unique: true,

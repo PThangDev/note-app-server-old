@@ -64,6 +64,9 @@ const noteService = {
     return notes;
     // const notes = await noteModel.find({})
   },
+  async getNotesOfTopics(req: IRequestAuth) {
+    // return { notes, topics };
+  },
   // Create Notes
   async createNote(req: IRequestAuth) {
     const { title, content, thumbnail, topics, background } = req.body;
@@ -75,9 +78,18 @@ const noteService = {
       background,
       user: req.user?._id,
       topics,
-      slug: createSlug(title),
     });
+    // @ts-ignore
+    newNote.slug = createSlug(`${title}-${newNote._id}`);
+
     await newNote.save();
+    // Update notes in topic
+    if (topics.length) {
+      await topicModel.updateMany(
+        { _id: { $in: topics }, user: req.user?._id },
+        { $push: { notes: newNote._id } }
+      );
+    }
     return newNote._doc;
   },
   // Update note
@@ -105,8 +117,15 @@ const noteService = {
   // Delete 1 note
   async deleteNote(req: IRequestAuth) {
     const { slug } = req.params;
+    const note = await noteModel.findOne({ slug, user: req.user?._id });
+    if (!note) throw createErrors(404, 'Note does not exist');
+
     const noteDeleted = await noteModel.findOneAndDelete({ slug, user: req.user?._id });
-    if (!noteDeleted) throw createErrors(404, 'Note does not exist');
+    // Delete note in topics
+    const topicsDeletedNote = await topicModel.updateMany(
+      { notes: note._id, user: req.user?._id },
+      { $pull: { notes: note._id } }
+    );
     return noteDeleted;
   },
   // Delete many notes

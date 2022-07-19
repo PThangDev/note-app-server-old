@@ -7,12 +7,18 @@ const noteRouter = express.Router();
 // GET
 // api/v1/notes
 noteRouter.get('/', authMiddleware, noteController.getNotesHandler);
+
 // GET
-// api/v1/notes/:slug
-noteRouter.get('/:slug', authMiddleware, noteController.getNoteBySlugHandler);
+// api/v1/notes/topics
+noteRouter.get('/topics', authMiddleware, noteController.getNotesOfTopicsHandler);
+
 // GET
 // api/v1/notes/topic/:slug
 noteRouter.get('/topic/:slug', authMiddleware, noteController.getNotesOfTopicHandler);
+
+// GET
+// api/v1/notes/:slug
+noteRouter.get('/:slug', authMiddleware, noteController.getNoteBySlugHandler);
 
 // POST
 // api/v1/notes

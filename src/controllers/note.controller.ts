@@ -25,10 +25,20 @@ const noteController = {
       next(error);
     }
   },
+  // GET notes of 1 topic
   async getNotesOfTopicHandler(req: IRequestAuth, res: Response, next: NextFunction) {
     try {
       const notes = await noteService.getNotesOfTopic(req);
-      return res.status(200).json({ data: notes, message: 'Get notes successfully' });
+      return res.status(200).json({ data: notes, message: 'Get notes of topic successfully' });
+    } catch (error) {
+      next(error);
+    }
+  },
+  // GET notes of many topics
+  async getNotesOfTopicsHandler(req: IRequestAuth, res: Response, next: NextFunction) {
+    try {
+      const notes = await noteService.getNotesOfTopics(req);
+      return res.status(200).json({ data: notes, message: 'Get notes of topics successfully' });
     } catch (error) {
       next(error);
     }
