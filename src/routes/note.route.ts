@@ -17,18 +17,18 @@ noteRouter.get('/topics', authMiddleware, noteController.getNotesOfTopicsHandler
 noteRouter.get('/topic/:slug', authMiddleware, noteController.getNotesOfTopicHandler);
 
 // GET
-// api/v1/notes/:slug
-noteRouter.get('/:slug', authMiddleware, noteController.getNoteBySlugHandler);
+// api/v1/notes/:id
+noteRouter.get('/:id', authMiddleware, noteController.getNoteHandler);
 
 // POST
 // api/v1/notes
 noteRouter.post('/', authMiddleware, noteController.createNoteHandler);
 // PUT
-// api/v1/notes/:slug
-noteRouter.put('/:slug', authMiddleware, noteController.updateNoteHandler);
+// api/v1/notes/:id
+noteRouter.put('/:id', authMiddleware, noteController.updateNoteHandler);
 // DELETE
-// api/v1/notes/:slug
-noteRouter.delete('/:slug', authMiddleware, noteController.deleteNoteHandler);
+// api/v1/notes/:id
+noteRouter.delete('/:id', authMiddleware, noteController.deleteNoteHandler);
 // DELETE
 // api/v1/notes
 noteRouter.delete('/', authMiddleware, noteController.deleteManyNoteHandler);

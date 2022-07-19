@@ -48,10 +48,10 @@ const noteService = {
     };
     return { notes, pagination };
   },
-  // GET note by slug
-  async getNoteBySlug(req: IRequestAuth) {
-    const { slug } = req.params;
-    const note = await noteModel.findOne({ slug });
+  // GET note
+  async getNote(req: IRequestAuth) {
+    const { id } = req.params;
+    const note = await noteModel.findById(id);
     return note;
   },
   async getNotesOfTopic(req: IRequestAuth) {
@@ -77,10 +77,9 @@ const noteService = {
       thumbnail,
       background,
       user: req.user?._id,
+      slug: createSlug(title),
       topics,
     });
-    // @ts-ignore
-    newNote.slug = createSlug(`${title}-${newNote._id}`);
 
     await newNote.save();
     // Update notes in topic
@@ -95,7 +94,7 @@ const noteService = {
   // Update note
   async updateNote(req: IRequestAuth) {
     const { title, content, thumbnail, background, topics, type } = req.body;
-    const { slug } = req.params;
+    const { id } = req.params;
 
     const data: INoteUpdate = { title, content, thumbnail, background, topics, slug: '', type };
 
@@ -108,7 +107,7 @@ const noteService = {
       data.slug = createSlug(data.title);
     }
     const noteUpdated = await noteModel
-      .findOneAndUpdate({ slug, user: req.user?._id }, data, {
+      .findOneAndUpdate({ _id: id, user: req.user?._id }, data, {
         new: true,
       })
       .populate({ path: 'topics' });
@@ -116,15 +115,16 @@ const noteService = {
   },
   // Delete 1 note
   async deleteNote(req: IRequestAuth) {
-    const { slug } = req.params;
-    const note = await noteModel.findOne({ slug, user: req.user?._id });
-    if (!note) throw createErrors(404, 'Note does not exist');
+    const { id } = req.params;
 
-    const noteDeleted = await noteModel.findOneAndDelete({ slug, user: req.user?._id });
+    const noteDeleted = await noteModel.findOneAndDelete({ _id: id, user: req.user?._id });
+
+    if (!noteDeleted) throw createErrors(404, 'Note does not exist');
+
     // Delete note in topics
     const topicsDeletedNote = await topicModel.updateMany(
-      { notes: note._id, user: req.user?._id },
-      { $pull: { notes: note._id } }
+      { notes: id, user: req.user?._id },
+      { $pull: { notes: id } }
     );
     return noteDeleted;
   },

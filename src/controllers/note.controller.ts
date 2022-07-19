@@ -1,5 +1,5 @@
 import createErrors from 'http-errors';
-import { NextFunction, Response } from 'express';
+import { NextFunction, Request, Response } from 'express';
 import noteService from '../services/note.service';
 import { IRequestAuth } from '../types';
 
@@ -13,10 +13,10 @@ const noteController = {
       next(error);
     }
   },
-  // GET note by slug
-  async getNoteBySlugHandler(req: IRequestAuth, res: Response, next: NextFunction) {
+  // GET note by id
+  async getNoteHandler(req: IRequestAuth, res: Response, next: NextFunction) {
     try {
-      const note = await noteService.getNoteBySlug(req);
+      const note = await noteService.getNote(req);
 
       if (!note) throw createErrors(404, 'Note does not exist');
 
