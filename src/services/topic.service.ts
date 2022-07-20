@@ -37,7 +37,7 @@ const topicService = {
   async updateTopic(req: IRequestAuth) {
     const { user } = req;
     const data = { ...req.body };
-    const { slug } = req.params;
+    const { id } = req.params;
 
     Object.keys(data).forEach((key) =>
       data[key] === undefined || data[key].trim() === '' ? delete data[key] : {}
@@ -46,7 +46,7 @@ const topicService = {
       data.slug = createSlug(data.name);
     }
 
-    const topicUpdated = await topicModel.findOneAndUpdate({ slug, user: user?._id }, data, {
+    const topicUpdated = await topicModel.findOneAndUpdate({ id, user: user?._id }, data, {
       new: true,
     });
 

@@ -12,7 +12,7 @@ topicRouter.get('/', authMiddleware, topicController.getTopicsHandler);
 topicRouter.post('/', authMiddleware, topicController.createTopicHandler);
 // PUT
 // Update topic by slug
-topicRouter.put('/:slug', authMiddleware, topicController.updateTopicHandler);
+topicRouter.put('/:id', authMiddleware, topicController.updateTopicHandler);
 // DELETE
 // Delete topic by slug
 topicRouter.delete('/:id', authMiddleware, topicController.deleteTopicHandler);
