@@ -23,10 +23,11 @@ const noteService = {
         .find(filter)
         .populate({ path: 'user', select: '-password' })
         .populate({ path: 'topics' }),
-      { limit, page, sort, search }
+      req.query
     )
       .pagination()
-      .sortable();
+      .sortable()
+      .filter();
     const counter = new QueryAPI(
       noteModel
         .find(filter)

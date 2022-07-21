@@ -2,19 +2,13 @@ import createSlug from '../helpers/createSlug';
 import QueryAPI from '../helpers/QueryAPI';
 import noteModel from '../models/note.model';
 import topicModel from '../models/topic.model';
-import { IQueryString, IRequestAuth } from '../types';
+import { IRequestAuth } from '../types';
 
 const topicService = {
   async getTopics(req: IRequestAuth) {
-    const { limit, page, sort, search } = <IQueryString>req.query;
     const features = new QueryAPI(
       topicModel.find({ user: req?.user }).populate({ path: 'user', select: '-password' }),
-      {
-        limit,
-        page,
-        sort,
-        search,
-      }
+      req.query
     )
       .pagination()
       .sortable();

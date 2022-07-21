@@ -1,7 +1,7 @@
 import { IQueryString } from '../types';
 
 class QueryAPI {
-  constructor(public query: any, private queryString: IQueryString) {}
+  constructor(public query: any, private queryString: any) {}
   pagination() {
     const limit = Number(this.queryString.limit) || 300;
     const page = Number(this.queryString.page) || 1;
