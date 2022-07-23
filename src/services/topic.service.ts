@@ -6,8 +6,17 @@ import { IRequestAuth } from '../types';
 
 const topicService = {
   async getTopics(req: IRequestAuth) {
+    const { note_limit, note_page } = req.query;
     const features = new QueryAPI(
-      topicModel.find({ user: req?.user }).populate({ path: 'user', select: '-password' }),
+      topicModel
+        .find({ user: req?.user })
+        .populate({ path: 'user', select: '-password' })
+        .populate({
+          path: 'notes',
+          match: { type: 'default' },
+          // perDocumentLimit: Number(noteLimit) || 8,
+          options: { limit: Number(note_limit) || 8 },
+        }),
       req.query
     )
       .pagination()
@@ -40,10 +49,9 @@ const topicService = {
       data.slug = createSlug(data.name);
     }
 
-    const topicUpdated = await topicModel.findOneAndUpdate({ id, user: user?._id }, data, {
+    const topicUpdated = await topicModel.findOneAndUpdate({ _id: id, user: user?._id }, data, {
       new: true,
     });
-
     return topicUpdated;
   },
   async deleteTopic(req: IRequestAuth) {

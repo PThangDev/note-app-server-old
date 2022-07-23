@@ -4,6 +4,7 @@ import QueryAPI from '../helpers/QueryAPI';
 import noteModel from '../models/note.model';
 import topicModel from '../models/topic.model';
 import { INoteUpdate, IQueryString, IRequestAuth } from '../types';
+import topicService from './topic.service';
 
 const noteService = {
   // GET Notes
