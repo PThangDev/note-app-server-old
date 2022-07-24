@@ -25,11 +25,8 @@ const noteSchema = new mongoose.Schema(
       required: true,
       unique: true,
     },
-    type: {
-      type: String,
-      enum: ['default', 'pin', 'trash'],
-      default: 'default',
-    },
+    is_trash: { type: Boolean, default: false },
+    is_pin: { type: Boolean, default: false },
   },
   { timestamps: true }
 );

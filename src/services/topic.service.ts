@@ -13,9 +13,9 @@ const topicService = {
         .populate({ path: 'user', select: '-password' })
         .populate({
           path: 'notes',
-          match: { type: 'default' },
-          // perDocumentLimit: Number(noteLimit) || 8,
+          match: { is_trash: false, is_pin: false },
           options: { limit: Number(note_limit) || 8 },
+          populate: { path: 'topics' },
         }),
       req.query
     )
@@ -23,6 +23,12 @@ const topicService = {
       .sortable();
     const topics = await features.query;
     return topics;
+  },
+  async getTopicDetail(req: IRequestAuth) {
+    const { id } = req.params;
+
+    const topicDetail = await topicModel.findOne({ _id: id, user: req.user?._id });
+    return topicDetail;
   },
   async createTopic(req: IRequestAuth) {
     const { user } = req;
@@ -59,7 +65,7 @@ const topicService = {
     const { id } = req.params;
 
     const topicDeleted = await topicModel.findOneAndDelete({ _id: id, user: user?._id });
-    await noteModel.deleteMany({ topic: id, user: user?._id });
+    await noteModel.updateMany({ topics: id, user: user?._id }, { topics: [] });
 
     return topicDeleted;
   },

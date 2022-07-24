@@ -9,14 +9,18 @@ import topicService from './topic.service';
 const noteService = {
   // GET Notes
   async getNotes(req: IRequestAuth) {
-    const { limit, page, sort, search } = <IQueryString>req.query;
+    const { limit, q: search, topics } = req.query;
 
     const filter: { [key: string]: any } = {
+      ...req.query,
       user: req.user?._id,
     };
 
     if (search) {
       filter['$text'] = { $search: search };
+    }
+    if (topics === 'null') {
+      filter.topics = { $size: 0 };
     }
 
     const response = new QueryAPI(
@@ -24,7 +28,7 @@ const noteService = {
         .find(filter)
         .populate({ path: 'user', select: '-password' })
         .populate({ path: 'topics' }),
-      req.query
+      filter
     )
       .pagination()
       .sortable()
@@ -34,7 +38,7 @@ const noteService = {
         .find(filter)
         .populate({ path: 'user', select: '-password' })
         .populate({ path: 'topics' }),
-      { limit, page, sort, search }
+      filter
     )
       .search()
       .filter()
@@ -95,10 +99,19 @@ const noteService = {
   },
   // Update note
   async updateNote(req: IRequestAuth) {
-    const { title, content, thumbnail, background, topics, type } = req.body;
+    const { title, content, thumbnail, background, topics, is_pin, is_trash } = req.body;
     const { id } = req.params;
 
-    const data: INoteUpdate = { title, content, thumbnail, background, topics, slug: '', type };
+    const data: INoteUpdate = {
+      title,
+      content,
+      thumbnail,
+      background,
+      topics,
+      slug: '',
+      is_pin,
+      is_trash,
+    };
 
     Object.keys(data).forEach((key) =>
       data[<keyof INoteUpdate>key] === undefined || data[<keyof INoteUpdate>key] === ''
@@ -113,6 +126,13 @@ const noteService = {
         new: true,
       })
       .populate({ path: 'topics' });
+    // if (topics?.length) {
+    //   const topicUpdated = await topicModel.updateMany(
+    //     { _id: { $in: topics }, user: req.user?._id },
+    //     { $set: { notes: id } }
+    //   );
+    // }
+
     return noteUpdated;
   },
   // Delete 1 note

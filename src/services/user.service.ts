@@ -5,7 +5,11 @@ import sendEmail from '../helpers/sendEmail';
 import userModel from '../models/user.model';
 import { IChangePassword, IDecodedToken, INewUser, IUserLogin } from '../types';
 import { validateEmail } from '../utils';
-import { generateAccessToken, generateActiveToken, generateRefreshToken } from '../helpers/generateToken';
+import {
+  generateAccessToken,
+  generateActiveToken,
+  generateRefreshToken,
+} from '../helpers/generateToken';
 import createSlug from '../helpers/createSlug';
 
 const CLIENT_URL = process.env.CLIENT_URL;
@@ -55,7 +59,10 @@ const userService = {
   },
   // Active account
   async activeAccount(active_token: string) {
-    const decodedToken = jwt.verify(active_token, `${process.env.ACTIVE_TOKEN_SECRET}`) as IDecodedToken;
+    const decodedToken = jwt.verify(
+      active_token,
+      `${process.env.ACTIVE_TOKEN_SECRET}`
+    ) as IDecodedToken;
 
     const { newUser } = decodedToken;
     if (!newUser) throw createErrors(401, 'Invalid authentication');

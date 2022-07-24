@@ -12,6 +12,15 @@ const topicController = {
       next(error);
     }
   },
+  // GET get topic by id
+  async getTopicDetailHandler(req: Request, res: Response, next: NextFunction) {
+    try {
+      const topic = await topicService.getTopicDetail(req);
+      return res.status(200).json({ data: topic, message: 'Get topic detail successfully' });
+    } catch (error) {
+      next(error);
+    }
+  },
   // POST Create topic
   async createTopicHandler(req: Request, res: Response, next: NextFunction) {
     try {

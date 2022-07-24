@@ -7,6 +7,9 @@ const topicRouter = express.Router();
 // GET
 // Topics
 topicRouter.get('/', authMiddleware, topicController.getTopicsHandler);
+// GET
+// Topic By Id
+topicRouter.get('/:id', authMiddleware, topicController.getTopicDetailHandler);
 // POST
 // Create new topic
 topicRouter.post('/', authMiddleware, topicController.createTopicHandler);

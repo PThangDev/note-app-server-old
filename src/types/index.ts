@@ -32,7 +32,8 @@ export interface INote extends Document {
   background: string;
   title: string;
   content: string;
-  type: TypeNote;
+  is_pin: boolean;
+  is_trash: boolean;
   _doc: object;
 }
 export interface INoteUpdate {
@@ -42,7 +43,8 @@ export interface INoteUpdate {
   content?: string;
   topics?: string;
   slug?: string;
-  type?: TypeNote;
+  is_pin?: boolean;
+  is_trash?: boolean;
 }
 
 export interface INewTopic extends Document {
@@ -74,10 +76,11 @@ export interface IChangePassword {
   newPassword: string;
 }
 export interface IQueryString {
-  limit?: string | number;
-  page?: string | number;
+  limit?: string;
+  page?: string;
   sort?: string;
   search?: string;
+  q?: string;
 }
 
 export interface IRequestAuth extends Request {
