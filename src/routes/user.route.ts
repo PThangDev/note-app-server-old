@@ -2,8 +2,12 @@ import express from 'express';
 
 import userController from '../controllers/user.controller';
 import authMiddleware from '../middlewares/auth.middleware';
-import { validateLogin, validateResgier } from '../middlewares/validateRequest.middleware';
-import { validateChangePassword, validateForgotPassword } from './../middlewares/validateRequest.middleware';
+import {
+  validateChangePassword,
+  validateForgotPassword,
+  validateLogin,
+  validateResgier,
+} from '../middlewares/validateAuth.middleware';
 
 const userRouter = express.Router();
 // Login

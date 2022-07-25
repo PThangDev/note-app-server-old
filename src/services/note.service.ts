@@ -126,13 +126,39 @@ const noteService = {
         new: true,
       })
       .populate({ path: 'topics' });
-    // if (topics?.length) {
-    //   const topicUpdated = await topicModel.updateMany(
-    //     { _id: { $in: topics }, user: req.user?._id },
-    //     { $set: { notes: id } }
-    //   );
-    // }
+    console.log(noteUpdated?.topics);
+    const topicIds = noteUpdated?.topics?.map((topic) => topic._id);
+    if (topics.length) {
+      const topicsUpdateNote = topicModel.updateMany(
+        { _id: { $in: topicIds }, user: req.user?._id },
+        {
+          $set: { notes: noteUpdated?._id },
+        }
+      );
+      const topicsRemoveNote = topicModel.updateMany(
+        { _id: { $nin: topicIds }, user: req.user?._id },
+        { $pull: { notes: noteUpdated?._id } }
+      );
 
+      await Promise.all([topicsUpdateNote, topicsRemoveNote]);
+
+      // const topicUpdated = await topicModel.updateMany({ _id: { $in: topics } }, [
+      //   {
+      //     $set: {
+      //       notes: {
+      //         $cond: [
+      //           { $in: [noteUpdated?._id, '$notes'] },
+      //           { $setDifference: ['$notes', [noteUpdated?._id]] },
+      //           { $concatArrays: ['$notes', [noteUpdated?._id]] },
+      //         ],
+      //       },
+      //     },
+      //   },
+      // ]);
+    } else {
+      console.log('else');
+      await topicModel.updateMany({ user: req.user?._id }, { $pull: { notes: noteUpdated?._id } });
+    }
     return noteUpdated;
   },
   // Delete 1 note

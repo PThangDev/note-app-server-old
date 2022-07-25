@@ -17,13 +17,14 @@ const noteSchema = new mongoose.Schema(
     content: {
       type: String,
       trim: true,
+      required: true,
     },
     thumbnail: { type: String, trim: true, default: '' },
     background: { type: String, trim: true, default: '' },
     slug: {
       type: String,
       required: true,
-      unique: true,
+      // unique: true,
     },
     is_trash: { type: Boolean, default: false },
     is_pin: { type: Boolean, default: false },
