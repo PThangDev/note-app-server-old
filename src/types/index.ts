@@ -86,3 +86,8 @@ export interface IQueryString {
 export interface IRequestAuth extends Request {
   user?: IUser;
 }
+
+export interface IUpdateManyNotes {
+  is_pin?: string;
+  is_trash?: string;
+}

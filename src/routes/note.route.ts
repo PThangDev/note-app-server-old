@@ -24,8 +24,12 @@ noteRouter.get('/:id', authMiddleware, noteController.getNoteHandler);
 // api/v1/notes
 noteRouter.post('/', authMiddleware, noteController.createNoteHandler);
 // PUT
+// api/v1/notes
+noteRouter.put('/', authMiddleware, noteController.updateNotesHandler);
+// PUT
 // api/v1/notes/:id
 noteRouter.put('/:id', authMiddleware, noteController.updateNoteHandler);
+
 // DELETE
 // api/v1/notes/:id
 noteRouter.delete('/:id', authMiddleware, noteController.deleteNoteHandler);

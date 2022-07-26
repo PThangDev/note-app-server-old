@@ -3,7 +3,7 @@ import createSlug from '../helpers/createSlug';
 import QueryAPI from '../helpers/QueryAPI';
 import noteModel from '../models/note.model';
 import topicModel from '../models/topic.model';
-import { INoteUpdate, IQueryString, IRequestAuth } from '../types';
+import { INoteUpdate, IQueryString, IRequestAuth, IUpdateManyNotes } from '../types';
 import topicService from './topic.service';
 
 const noteService = {
@@ -146,6 +146,30 @@ const noteService = {
       await topicModel.updateMany({ user: req.user?._id }, { $pull: { notes: noteUpdated?._id } });
     }
     return noteUpdated;
+  },
+  // Update many note
+  async updateNotes(req: IRequestAuth) {
+    const { noteIds, update } = req.body;
+
+    const dataUpdate = {
+      is_trash: update.is_trash,
+      is_pin: update.is_pin,
+    };
+
+    Object.keys(dataUpdate).forEach((key) => {
+      if (dataUpdate[key as keyof IUpdateManyNotes] === undefined) {
+        delete dataUpdate[key as keyof IUpdateManyNotes];
+      }
+    });
+    const notesUpdated = await noteModel.updateMany(
+      { _id: { $in: noteIds } },
+      { $set: dataUpdate },
+      {
+        new: true,
+      }
+    );
+
+    return notesUpdated;
   },
   // Delete 1 note
   async deleteNote(req: IRequestAuth) {
