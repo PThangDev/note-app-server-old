@@ -126,13 +126,14 @@ const noteService = {
         new: true,
       })
       .populate({ path: 'topics' });
-    console.log(noteUpdated?.topics);
+
     const topicIds = noteUpdated?.topics?.map((topic) => topic._id);
-    if (topics.length) {
+
+    if (topics?.length) {
       const topicsUpdateNote = topicModel.updateMany(
         { _id: { $in: topicIds }, user: req.user?._id },
         {
-          $set: { notes: noteUpdated?._id },
+          $addToSet: { notes: noteUpdated?._id },
         }
       );
       const topicsRemoveNote = topicModel.updateMany(
@@ -141,22 +142,7 @@ const noteService = {
       );
 
       await Promise.all([topicsUpdateNote, topicsRemoveNote]);
-
-      // const topicUpdated = await topicModel.updateMany({ _id: { $in: topics } }, [
-      //   {
-      //     $set: {
-      //       notes: {
-      //         $cond: [
-      //           { $in: [noteUpdated?._id, '$notes'] },
-      //           { $setDifference: ['$notes', [noteUpdated?._id]] },
-      //           { $concatArrays: ['$notes', [noteUpdated?._id]] },
-      //         ],
-      //       },
-      //     },
-      //   },
-      // ]);
     } else {
-      console.log('else');
       await topicModel.updateMany({ user: req.user?._id }, { $pull: { notes: noteUpdated?._id } });
     }
     return noteUpdated;
